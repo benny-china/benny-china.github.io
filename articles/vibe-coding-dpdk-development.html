@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Accelerating DPDK Development with Vibe Coding: From 6 Months to 5 Days</title>
-    <meta name="description" content="Learn how vibe coding revolutionizes DPDK development by reducing complex network application development from months to days. Real-world case study and practical insights.">
-    <meta name="keywords" content="vibe coding, DPDK, network development, antiddos, network flows, high-performance programming">
+    <title>Application of Vibe Coding in DPDK Development</title>
+    <meta name="description" content="Real-world case study of using vibe coding for DPDK development, transforming 6-month development cycle to 5 days with AI-assisted programming.">
+    <meta name="keywords" content="vibe coding, DPDK, network flows, antiddos, high-performance programming, AI development">
     <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
@@ -28,155 +28,182 @@
         <article class="blog-post">
             <div class="container">
                 <header class="post-header">
-                    <h1>Accelerating DPDK Development with Vibe Coding: From 6 Months to 5 Days</h1>
+                    <h1>Application of Vibe Coding in DPDK Development</h1>
                     <div class="post-meta">
                         <time datetime="2024-09-08">September 8, 2024</time>
-                        <span class="reading-time">15 min read</span>
+                        <span class="reading-time">20 min read</span>
                         <div class="tags">
                             <span class="tag">vibe coding</span>
                             <span class="tag">DPDK</span>
                             <span class="tag">network flows</span>
                             <span class="tag">antiddos</span>
-                            <span class="tag">high-performance</span>
                         </div>
                     </div>
                 </header>
 
                 <div class="post-content">
-                    <p class="lead">
-                        High-performance network programming has always been the holy grail of systems development. DPDK (Data Plane Development Kit) applications, with their complex memory management, multi-threading models, and hardware interactions, typically require extensive expertise and months of development time. But what if I told you there's a way to compress a 6-month development cycle into just 5 days? 🚀
-                    </p>
+                    <h2>Preface</h2>
+                    
+                    <p>High-performance network programming has always been a technical highland in system development, especially for network application development based on DPDK (Data Plane Development Kit). Due to its complex memory management, multi-threading models, and hardware interaction mechanisms, it often requires extensive professional knowledge accumulation and development experience. However, with the development of AI-assisted programming tools, particularly the emerging collaborative development model of "vibe coding," new possibilities have emerged for the development of such complex systems.</p>
 
-                    <p>
-                        Welcome to the world of <strong>vibe coding</strong> – a revolutionary AI-assisted development approach that's transforming how we build complex network applications. In this article, I'll share our real-world experience of completely rewriting an IP traffic detection system using DPDK, and how this new development paradigm made the seemingly impossible, possible.
-                    </p>
+                    <p>This article will share our experience of applying vibe coding in high-performance network development based on a real project case - using DPDK to refactor an IP traffic detection system. We'll explore how this development model compressed what would traditionally take half a year into 5 days of development, along with the lessons learned in the process.</p>
 
-                    <h2>The Traditional DPDK Development Nightmare</h2>
+                    <h2>1. Challenges in DPDK Development and Pain Points of Traditional Approaches</h2>
 
-                    <p>
-                        Before diving into our success story, let's be honest about what DPDK development traditionally looks like. It's not for the faint of heart.
-                    </p>
+                    <h3>1.1 Complexity of the DPDK Technology Stack</h3>
 
-                    <h3>The Technical Complexity Mountain</h3>
+                    <p>DPDK, as a high-performance packet processing framework, has the following technical characteristics:</p>
 
-                    <p>
-                        DPDK development involves several layers of complexity that can make even experienced developers break into a cold sweat:
-                    </p>
-
+                    <p><strong>Low-level Hardware Abstraction:</strong></p>
                     <ul>
-                        <li><strong>Hardware Abstraction Hell:</strong> User-space network drivers, CPU affinity management, NUMA awareness, and the delicate balance between interrupt and polling modes</li>
-                        <li><strong>Memory Management Maze:</strong> mbuf memory pools, lock-free queues, ring buffers, cross-core data sharing, and the notorious memory barriers and atomic operations</li>
-                        <li><strong>Multi-threading Madness:</strong> lcore thread models, work thread allocation strategies, inter-core communication, and the joy of hunting down performance bottlenecks</li>
+                        <li>User-space implementation of NIC drivers</li>
+                        <li>CPU affinity and NUMA awareness</li>
+                        <li>Huge page memory management</li>
+                        <li>Balance between interrupt and polling modes</li>
                     </ul>
 
+                    <p><strong>Complex Memory Model:</strong></p>
+                    <ul>
+                        <li>mbuf memory pool management</li>
+                        <li>Lock-free queues and ring buffers</li>
+                        <li>Data sharing mechanisms between multiple cores</li>
+                        <li>Memory barriers and atomic operations</li>
+                    </ul>
+
+                    <p><strong>Multi-threading Programming Challenges:</strong></p>
+                    <ul>
+                        <li>lcore thread model</li>
+                        <li>Worker thread allocation strategies</li>
+                        <li>Cross-core communication mechanisms</li>
+                        <li>Performance bottleneck identification</li>
+                    </ul>
+
+                    <h3>1.2 Pain Points of Traditional Development Approaches</h3>
+
+                    <p>In traditional DPDK development workflows, developers typically face the following challenges:</p>
+
+                    <p><strong>Steep Learning Curve:</strong></p>
+                    <ul>
+                        <li>Need to deeply understand network protocol stacks</li>
+                        <li>Master DPDK APIs and programming paradigms</li>
+                        <li>Familiarize with high-performance programming techniques</li>
+                        <li>Understand hardware characteristics' impact on performance</li>
+                    </ul>
+
+                    <p><strong>High Debugging Complexity:</strong></p>
+                    <ul>
+                        <li>Multi-threading race conditions difficult to reproduce</li>
+                        <li>Root cause analysis of performance issues challenging</li>
+                        <li>Troubleshooting memory leaks and buffer overruns</li>
+                        <li>Visualization of network packet processing flows difficult</li>
+                    </ul>
+
+                    <p><strong>Long Development Cycles:</strong></p>
+                    <ul>
+                        <li>Requires extensive trial-and-error and performance tuning</li>
+                        <li>Incomplete documentation and example code coverage</li>
+                        <li>API compatibility issues between different versions</li>
+                        <li>Complex configuration requirements for deployment environments</li>
+                    </ul>
+
+                    <p><em>[Suggested to insert screenshots or charts of traditional development workflow pain points here]</em></p>
+
+                    <h2>2. Characteristics and Working Methods of Vibe Coding</h2>
+
+                    <h3>2.1 What is Vibe Coding</h3>
+
+                    <p>Vibe Coding is an AI-assisted collaborative programming model with core characteristics including:</p>
+
+                    <p><strong>Natural Language-Driven Development:</strong></p>
+                    <ul>
+                        <li>Use natural language to describe requirements and technical specifications</li>
+                        <li>AI understands context and generates corresponding code implementations</li>
+                        <li>Developers guide code evolution through conversational methods</li>
+                        <li>Real-time feedback and iterative optimization</li>
+                    </ul>
+
+                    <p><strong>Context-Aware Code Generation:</strong></p>
+                    <ul>
+                        <li>Analyze existing codebase architecture and patterns</li>
+                        <li>Maintain consistency in code style and programming paradigms</li>
+                        <li>Understand project dependencies and configurations</li>
+                        <li>Generate code that complies with project standards</li>
+                    </ul>
+
+                    <p><strong>Incremental Development Process:</strong></p>
+                    <ul>
+                        <li>Start with core functionality and gradually expand</li>
+                        <li>Independent development and testing of each functional module</li>
+                        <li>Rapid prototype validation and problem discovery</li>
+                        <li>Continuous integration and feature iteration</li>
+                    </ul>
+
+                    <h3>2.2 Vibe Coding Workflow</h3>
+
+                    <p>In our DPDK project, the typical vibe coding workflow is as follows:</p>
+
+                    <p><strong>1. Requirement Clarification Phase</strong></p>
+                    <ul>
+                        <li>Describe functional requirements in natural language</li>
+                        <li>AI analyzes and asks clarifying questions</li>
+                        <li>Determine technical implementation approach</li>
+                        <li>Formulate development plan</li>
+                    </ul>
+
+                    <p><strong>2. Code Generation Phase</strong></p>
+                    <ul>
+                        <li>AI generates implementation based on existing codebase</li>
+                        <li>Automatically handle dependencies and interface adaptation</li>
+                        <li>Follow project programming conventions</li>
+                        <li>Generate accompanying test code</li>
+                    </ul>
+
+                    <p><strong>3. Validation and Iteration Phase</strong></p>
+                    <ul>
+                        <li>Compilation validation and functional testing</li>
+                        <li>Adjust implementation based on test results</li>
+                        <li>Performance optimization and bug fixes</li>
+                        <li>Code review and refactoring</li>
+                    </ul>
+
+                    <p><em>[Suggested to insert vibe coding workflow comparison diagram here]</em></p>
+
+                    <h2>3. Project Case Study: DPDK IP Traffic Detection System Refactoring</h2>
+
+                    <h3>3.1 Project Background</h3>
+
+                    <p>The original project was an IP traffic monitoring system implemented based on VPP (Vector Packet Processing), with main functions including:</p>
+                    <ul>
+                        <li>Real-time network traffic statistics</li>
+                        <li>IP address-level traffic analysis</li>
+                        <li>DDoS attack detection and protection</li>
+                        <li>Configurable threshold alerting mechanism</li>
+                    </ul>
+
+                    <p>Due to VPP's performance bottlenecks and maintenance complexity in specific scenarios, we decided to re-implement the entire system using DPDK.</p>
+
+                    <h3>3.2 Technical Architecture Design</h3>
+
+                    <p>Through vibe coding methods, we quickly determined the system architecture:</p>
+
+                    <p><strong>Core Component Structure:</strong></p>
                     <div class="code-block">
-                        <pre><code class="language-c">
-// Traditional DPDK setup - looks simple, but each line hides complexity
-uint16_t nb_rx = rte_eth_rx_burst(port, 0, pkts_burst, MAX_PKT_BURST);
-for (i = 0; i < nb_rx; i++) {
-    // This innocent loop can become a performance nightmare
-    process_packet(pkts_burst[i]);
-}
-                        </code></pre>
-                    </div>
-
-                    <h3>The Development Pain Points</h3>
-
-                    <p>
-                        Traditional DPDK development comes with a hefty price tag in terms of time and sanity:
-                    </p>
-
-                    <ul>
-                        <li><strong>Steep Learning Curve:</strong> Deep network stack understanding, DPDK API mastery, high-performance programming techniques, and hardware-specific optimizations</li>
-                        <li><strong>Debugging Complexity:</strong> Race conditions that appear once in a blue moon, performance bottlenecks that hide in plain sight, memory leaks in lock-free code, and packet processing flows that are nearly impossible to visualize</li>
-                        <li><strong>Extended Development Cycles:</strong> Months of trial and error, incomplete documentation, API compatibility issues between versions, and deployment environment configuration nightmares</li>
-                    </ul>
-
-                    <h2>Enter Vibe Coding: The Game Changer</h2>
-
-                    <p>
-                        So, what exactly is <strong>vibe coding</strong>, and why is it causing such a stir in the development community?
-                    </p>
-
-                    <h3>Understanding Vibe Coding</h3>
-
-                    <p>
-                        Vibe coding is an AI-assisted collaborative programming approach that fundamentally changes how we build software. Think of it as having a brilliant coding partner who never gets tired, never gets frustrated, and has read every DPDK manual ever written.
-                    </p>
-
-                    <p>
-                        The key characteristics include:
-                    </p>
-
-                    <ul>
-                        <li><strong>Natural Language-Driven Development:</strong> Describe what you want in plain English, and watch as functional code materializes</li>
-                        <li><strong>Context-Aware Code Generation:</strong> The AI understands your existing codebase, maintains consistency, and generates code that fits your project's patterns</li>
-                        <li><strong>Incremental Development Flow:</strong> Build from core functionality outward, with rapid prototyping and continuous validation</li>
-                    </ul>
-
-                    <h3>The Vibe Coding Workflow</h3>
-
-                    <p>
-                        Our typical vibe coding session follows this pattern:
-                    </p>
-
-                    <ol>
-                        <li><strong>Requirement Clarification:</strong> Natural language descriptions, AI-generated clarifying questions, solution brainstorming, and development planning</li>
-                        <li><strong>Code Generation:</strong> AI analyzes existing codebase, handles dependencies automatically, follows project conventions, and generates accompanying tests</li>
-                        <li><strong>Validation and Iteration:</strong> Compile and test, adjust based on results, optimize performance, and conduct code reviews</li>
-                    </ol>
-
-                    <div class="highlight-box">
-                        <p><strong>💡 Pro Tip:</strong> The key to successful vibe coding is treating the AI as a collaborative partner, not just a code generator. The more context you provide, the better the results!</p>
-                    </div>
-
-                    <h2>Real-World Case Study: DPDK Traffic Detection System</h2>
-
-                    <p>
-                        Let me share the project that opened my eyes to the power of vibe coding: completely rewriting an IP traffic monitoring system from VPP (Vector Packet Processing) to DPDK.
-                    </p>
-
-                    <h3>The Challenge</h3>
-
-                    <p>
-                        Our original system, built on VPP, handled:
-                    </p>
-
-                    <ul>
-                        <li>Real-time network flows analysis</li>
-                        <li>IP-level traffic statistics</li>
-                        <li>DDoS attack detection and mitigation</li>
-                        <li>Configurable threshold alerting</li>
-                    </ul>
-
-                    <p>
-                        Performance bottlenecks and maintenance complexity drove us to consider a DPDK rewrite – a task that would traditionally take our team 6+ months.
-                    </p>
-
-                    <h3>The Architecture Revolution</h3>
-
-                    <p>
-                        Through vibe coding, we rapidly designed a clean, performant architecture:
-                    </p>
-
-                    <div class="code-block">
-                        <pre><code class="language-bash">
+                        <pre><code>
 src/
-├── analysis.c/.h      # Core traffic analysis engine
+├── analysis.c/.h      # Core traffic analysis logic
 ├── config.c/.h        # Configuration file parsing
 ├── ipc.c/.h           # Inter-process communication
-├── arp.c/.h           # ARP protocol handling
-└── antiddosctl.c      # Command-line control tool
+├── arp.c/.h           # ARP protocol processing  
+└── antiddosctl.c      # Control command-line tool
                         </code></pre>
                     </div>
 
-                    <h4>Core Implementation Highlights</h4>
+                    <p><strong>Key Technical Implementation:</strong></p>
 
-                    <p><strong>High-Performance Packet Processing Engine:</strong></p>
-
+                    <p><strong>1. High-Performance Packet Processing Engine</strong> (analysis.c)</p>
                     <div class="code-block">
                         <pre><code class="language-c">
-// DPDK hash table for IP statistics
+// Use DPDK hash table for IP statistics
 static struct rte_hash *ip_stats_table = NULL;
 static struct ip_stats ip_stats_data[MAX_IP_ENTRIES];
 
@@ -188,291 +215,307 @@ for (i = 0; i < nb_rx; i++) {
                         </code></pre>
                     </div>
 
-                    <p><strong>Flexible Configuration System:</strong></p>
-
+                    <p><strong>2. Flexible Configuration System</strong> (config.c)</p>
                     <div class="code-block">
                         <pre><code class="language-c">
-// Runtime configuration updates
+// Support runtime configuration updates
 struct app_config {
     uint32_t syn_packets_threshold;
     uint32_t udp_packets_threshold;
     uint32_t detection_cycle;
-    // Additional parameters...
+    // ...
 };
                         </code></pre>
                     </div>
 
-                    <p><strong>Robust IPC Communication:</strong></p>
-                    <p>
-                        Built on Unix Domain Sockets with multi-client support and comprehensive command parsing – all generated and refined through vibe coding sessions.
-                    </p>
-
-                    <h3>Key Features Delivered</h3>
-
+                    <p><strong>3. IPC Communication Mechanism</strong> (ipc.c)</p>
                     <ul>
-                        <li><strong>Traffic Statistics:</strong> Real-time per-IP packet counts, byte statistics, and protocol-specific metrics with filtering capabilities</li>
-                        <li><strong>Detection Mechanisms:</strong> Sliding window threshold detection with configurable alerting and snapshot recording</li>
-                        <li><strong>Configuration Management:</strong> Hot-swappable configuration updates without service restarts</li>
+                        <li>Server based on Unix Domain Socket</li>
+                        <li>Support concurrent connections from multiple clients</li>
+                        <li>Complete command parsing and response mechanism</li>
                     </ul>
 
-                    <h2>The Shocking Results: 6 Months vs 5 Days</h2>
+                    <p><em>[Suggested to insert system architecture diagram or core code screenshots here]</em></p>
 
-                    <h3>Development Timeline Comparison</h3>
+                    <h3>3.3 Core Functionality Implementation</h3>
 
-                    <div class="comparison-table">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Phase</th>
-                                    <th>Traditional Approach</th>
-                                    <th>Vibe Coding</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>Requirements & Research</td>
-                                    <td>2-3 weeks</td>
-                                    <td>Day 1 morning</td>
-                                </tr>
-                                <tr>
-                                    <td>Architecture Design</td>
-                                    <td>1-2 weeks</td>
-                                    <td>Day 1 afternoon</td>
-                                </tr>
-                                <tr>
-                                    <td>Core Development</td>
-                                    <td>8-12 weeks</td>
-                                    <td>Days 2-3</td>
-                                </tr>
-                                <tr>
-                                    <td>Integration & Testing</td>
-                                    <td>4-6 weeks</td>
-                                    <td>Day 4</td>
-                                </tr>
-                                <tr>
-                                    <td>Optimization & Fixes</td>
-                                    <td>4-8 weeks</td>
-                                    <td>Day 5</td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Total</strong></td>
-                                    <td><strong>21-34 weeks</strong></td>
-                                    <td><strong>5 days</strong></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
+                    <p><strong>Traffic Statistics Functionality:</strong><br>
+                    The system can collect real-time statistics for each IP address including packet count, byte count, SYN/UDP/ICMP packet counts and other metrics, and supports filtered debug output by protocol type.</p>
 
-                    <h3>Quality Metrics</h3>
+                    <p><strong>Detection Mechanism:</strong><br>
+                    Implemented sliding window-based threshold detection mechanism. When traffic from a certain IP exceeds configured thresholds, it triggers alerts and records to snapshot data.</p>
 
-                    <p>
-                        Surprisingly, the accelerated development didn't compromise quality:
-                    </p>
+                    <p><strong>Configuration Management:</strong><br>
+                    Supports runtime configuration modifications including detection thresholds, detection cycles, interface probing switches, etc., without requiring service restart.</p>
 
+                    <p><em>[Suggested to insert functionality demonstration screenshots here]</em></p>
+
+                    <h2>4. Results Comparison: Half a Year vs 5 Days</h2>
+
+                    <h3>4.1 Development Time Comparison</h3>
+
+                    <p><strong>Traditional Development Approach (Estimated):</strong></p>
                     <ul>
-                        <li><strong>Code Quality:</strong> ~3000 lines of C code with near-perfect compilation success rate and consistent styling</li>
-                        <li><strong>Feature Completeness:</strong> All core functionality implemented including traffic detection, configuration management, IPC communication, and debugging tools</li>
-                        <li><strong>Performance:</strong> Met all performance requirements with efficient memory usage and balanced CPU utilization</li>
+                        <li>Requirements analysis and technical research: 2-3 weeks</li>
+                        <li>Architecture design and technology selection: 1-2 weeks</li>
+                        <li>Core functionality development: 8-12 weeks</li>
+                        <li>System integration and testing: 4-6 weeks</li>
+                        <li>Performance optimization and bug fixes: 4-8 weeks</li>
+                        <li>Documentation writing and deployment: 2-3 weeks</li>
+                        <li><strong>Total: 21-34 weeks (approximately 5-8 months)</strong></li>
                     </ul>
 
-                    <div class="success-box">
-                        <p><strong>🎯 Bottom Line:</strong> We achieved in 5 days what would traditionally take 6+ months, without sacrificing code quality or functionality!</p>
-                    </div>
-
-                    <h2>Lessons Learned: The Good, The Bad, and The Ugly</h2>
-
-                    <h3>What Worked Amazingly Well</h3>
-
-                    <h4>1. Rich Context Is King</h4>
-                    <p>
-                        The more background information you provide to the AI, the better the results:
-                    </p>
+                    <p><strong>Vibe Coding Approach (Actual):</strong></p>
                     <ul>
-                        <li>Existing codebase structure and conventions</li>
+                        <li>Day 1: Project initialization and basic architecture</li>
+                        <li>Day 2: Core packet processing engine implementation</li>
+                        <li>Day 3: Configuration system and IPC communication</li>
+                        <li>Day 4: Control tools and debugging functionality</li>
+                        <li>Day 5: System integration and basic testing</li>
+                        <li><strong>Total: 5 days</strong></li>
+                    </ul>
+
+                    <h3>4.2 Quality Metrics Comparison</h3>
+
+                    <p><strong>Code Quality:</strong></p>
+                    <ul>
+                        <li>Lines of code: approximately 3000 lines of C code</li>
+                        <li>Compilation success rate: close to 100% (AI-generated code has high syntactic correctness)</li>
+                        <li>Code style consistency: excellent (AI can learn and maintain project style)</li>
+                        <li>Documentation completeness: good (automatically generated test guides and usage instructions)</li>
+                    </ul>
+
+                    <p><strong>Functional Completeness:</strong></p>
+                    <ul>
+                        <li>Core traffic detection functionality: ✅ Complete implementation</li>
+                        <li>Configuration management system: ✅ Complete implementation</li>
+                        <li>IPC communication mechanism: ✅ Complete implementation</li>
+                        <li>Debugging and monitoring tools: ✅ Complete implementation</li>
+                        <li>Performance optimization: ✅ Basic optimization completed</li>
+                    </ul>
+
+                    <h3>4.3 Performance Results</h3>
+
+                    <p>Although development time was significantly shortened, system performance was not compromised:</p>
+                    <ul>
+                        <li>Packet processing speed: meets expected performance requirements</li>
+                        <li>Memory usage efficiency: reasonable memory pool configuration</li>
+                        <li>CPU utilization: good multi-core load balancing</li>
+                        <li>System stability: passed basic testing</li>
+                    </ul>
+
+                    <p><em>[Suggested to insert performance testing comparison charts here]</em></p>
+
+                    <h2>5. Experience Summary and Shortcomings</h2>
+
+                    <h3>5.1 Successful Experiences</h3>
+
+                    <p><strong>1. Providing Sufficient Context</strong><br>
+                    When collaborating with AI, providing detailed background information is crucial:</p>
+                    <ul>
+                        <li>Structure and conventions of existing codebase</li>
                         <li>Technology stack and dependencies</li>
                         <li>Performance requirements and constraints</li>
-                        <li>Specific functional requirements and edge cases</li>
+                        <li>Specific functional requirements and boundary conditions</li>
                     </ul>
 
-                    <h4>2. Iterative Development Strategy</h4>
-                    <p>
-                        The "small steps, frequent validation" approach proved incredibly effective:
-                    </p>
+                    <p><em>[Suggested to insert screenshots of requirement description conversations here]</em></p>
+
+                    <p><strong>2. Iterative Development Strategy</strong><br>
+                    Adopting a small-steps-fast-run development approach:</p>
                     <ul>
-                        <li>Start with the simplest core functionality</li>
-                        <li>Focus on one module at a time</li>
-                        <li>Validate and test each increment immediately</li>
-                        <li>Adjust plans based on real feedback</li>
+                        <li>Start from the simplest core functionality</li>
+                        <li>Focus on implementing one module at a time</li>
+                        <li>Timely validation and testing of each incremental feature</li>
+                        <li>Adjust subsequent development plans based on feedback</li>
                     </ul>
 
-                    <h4>3. AI's Learning Superpowers</h4>
-                    <p>
-                        The AI consistently impressed with its ability to:
-                    </p>
+                    <p><strong>3. Code Review and Optimization</strong><br>
+                    Although AI-generated code is of high quality, human review is still necessary:</p>
                     <ul>
-                        <li>Learn and maintain project coding patterns</li>
-                        <li>Handle complex dependency relationships automatically</li>
-                        <li>Generate project-compliant configuration files</li>
-                        <li>Maintain consistency across multiple modules</li>
+                        <li>Check for potential security vulnerabilities</li>
+                        <li>Optimize performance hotspot code</li>
+                        <li>Ensure completeness of error handling</li>
+                        <li>Verify correctness of memory management</li>
                     </ul>
 
-                    <h3>The Challenges We Encountered</h3>
-
-                    <h4>1. Performance Optimization Limitations</h4>
-                    <p>
-                        While the AI generates functionally correct code, deep performance optimization still requires human expertise:
-                    </p>
+                    <p><strong>4. Fully Utilizing AI's Learning Capabilities</strong></p>
                     <ul>
-                        <li>Hardware-specific optimizations</li>
-                        <li>CPU cache-friendly data structures</li>
-                        <li>Memory access pattern optimization</li>
+                        <li>AI can quickly learn project programming patterns</li>
+                        <li>Maintain consistent style during code generation</li>
+                        <li>Automatically handle complex dependency relationships</li>
+                        <li>Generate configuration files that comply with project standards</li>
+                    </ul>
+
+                    <p><em>[Suggested to insert screenshots of code generation process conversations here]</em></p>
+
+                    <h3>5.2 Challenges Encountered</h3>
+
+                    <p><strong>1. Limitations in Performance Optimization</strong><br>
+                    While AI can generate functionally correct code, it still has shortcomings in high-performance optimization:</p>
+                    <ul>
+                        <li>Limited understanding of hardware characteristics</li>
+                        <li>Insufficient consideration of CPU cache optimization</li>
+                        <li>Room for improvement in memory access pattern optimization</li>
                         <li>Algorithm selection for specific scenarios</li>
                     </ul>
 
-                    <h4>2. Edge Case Handling</h4>
-                    <p>
-                        Complex error scenarios sometimes require human intervention:
-                    </p>
+                    <p><strong>2. Handling Complex Error Scenarios</strong><br>
+                    AI may have omissions when dealing with some edge cases:</p>
                     <ul>
                         <li>Extreme memory pressure situations</li>
-                        <li>Network fault tolerance and recovery</li>
-                        <li>Rare multi-threading race conditions</li>
-                        <li>Hardware failure graceful degradation</li>
+                        <li>Network exception and recovery mechanisms</li>
+                        <li>Special cases of multi-threading competition</li>
+                        <li>Fault-tolerant handling of hardware failures</li>
                     </ul>
 
-                    <h4>3. System Integration Complexity</h4>
-                    <p>
-                        Large-scale system integration still benefits from human oversight:
-                    </p>
+                    <p><strong>3. Complexity of System-Level Integration</strong><br>
+                    During system integration phase, some issues require manual intervention:</p>
                     <ul>
-                        <li>Inter-module interface adaptation</li>
-                        <li>Configuration parameter validation</li>
-                        <li>Deployment environment compatibility</li>
-                        <li>Monitoring and logging system enhancement</li>
+                        <li>Interface adaptation between different modules</li>
+                        <li>Configuration parameter rationality validation</li>
+                        <li>Deployment environment compatibility issues</li>
+                        <li>Improvement of monitoring and logging systems</li>
                     </ul>
 
-                    <h3>Improvement Recommendations</h3>
+                    <h3>5.3 Improvement Suggestions</h3>
 
-                    <div class="recommendation-box">
-                        <h4>For Developers:</h4>
-                        <ul>
-                            <li>Invest time in crafting detailed, accurate requirement descriptions</li>
-                            <li>Build comprehensive test suites and validation mechanisms</li>
-                            <li>Maintain critical thinking about generated code</li>
-                            <li>Accumulate domain-specific optimization knowledge</li>
-                        </ul>
-
-                        <h4>For AI Tools:</h4>
-                        <ul>
-                            <li>Enhanced understanding of hardware characteristics and performance optimization</li>
-                            <li>Improved handling of complex error scenarios</li>
-                            <li>Better code explanation and documentation generation</li>
-                            <li>Support for more sophisticated refactoring and optimization suggestions</li>
-                        </ul>
-                    </div>
-
-                    <h2>The Future of High-Performance Network Development</h2>
-
-                    <h3>Emerging Trends</h3>
-
-                    <p>
-                        As AI capabilities continue to advance, we can expect:
-                    </p>
-
-                    <ul>
-                        <li><strong>Enhanced Code Generation:</strong> More accurate, context-aware, and optimized code production</li>
-                        <li><strong>Tool Integration:</strong> Seamless integration with IDEs, real-time code review, automated test generation, and intelligent performance analysis</li>
-                        <li><strong>Domain Specialization:</strong> AI models trained specifically for network programming, DPDK optimization, and high-performance computing</li>
-                    </ul>
-
-                    <h3>Expanding Applications</h3>
-
-                    <p>
-                        Vibe coding shows promise in several areas:
-                    </p>
-
-                    <ul>
-                        <li><strong>Network Protocol Development:</strong> Automated protocol parsing, intelligent packet processing optimization, and complex routing algorithms</li>
-                        <li><strong>Distributed Systems:</strong> Rapid microservice architecture setup, optimized inter-service communication, and robust fault tolerance mechanisms</li>
-                        <li><strong>Embedded Systems:</strong> Real-time task scheduling, rapid driver development, and resource-constrained optimization</li>
-                    </ul>
-
-                    <h3>Industry Impact</h3>
-
-                    <p>
-                        The implications extend beyond individual productivity:
-                    </p>
-
-                    <ul>
-                        <li><strong>Democratization of Expertise:</strong> Making high-performance programming accessible to more developers</li>
-                        <li><strong>Skill Evolution:</strong> Shifting focus from implementation to architecture and design</li>
-                        <li><strong>Quality Improvement:</strong> Reduced human error, improved consistency, and better documentation</li>
-                    </ul>
-
-                    <div class="future-box">
-                        <p><strong>🔮 Prediction:</strong> Within 5 years, vibe coding will become the standard approach for complex systems development, fundamentally changing how we think about software engineering.</p>
-                    </div>
-
-                    <h2>Getting Started with Vibe Coding</h2>
-
-                    <h3>Practical First Steps</h3>
-
+                    <p><strong>For Developers:</strong></p>
                     <ol>
-                        <li><strong>Start Small:</strong> Choose a well-defined module or component for your first vibe coding experiment</li>
-                        <li><strong>Prepare Context:</strong> Document your existing codebase, dependencies, and requirements thoroughly</li>
-                        <li><strong>Set Expectations:</strong> Understand that you're collaborating with AI, not replacing human judgment</li>
-                        <li><strong>Iterate Rapidly:</strong> Embrace the feedback loop and continuous refinement process</li>
-                        <li><strong>Stay Critical:</strong> Always review, test, and validate AI-generated code</li>
+                        <li>Provide more accurate and detailed requirement descriptions</li>
+                        <li>Establish comprehensive test cases and validation mechanisms</li>
+                        <li>Maintain critical thinking about generated code</li>
+                        <li>Accumulate optimization experience in specific domains</li>
                     </ol>
 
-                    <h3>Best Practices for Success</h3>
+                    <p><strong>For AI Tools:</strong></p>
+                    <ol>
+                        <li>Enhance understanding of hardware characteristics and performance optimization</li>
+                        <li>Improve handling capabilities for complex error scenarios</li>
+                        <li>Provide better code explanation and documentation generation</li>
+                        <li>Support more complex refactoring and optimization suggestions</li>
+                    </ol>
 
+                    <p><em>[Suggested to insert screenshots of bug fixing process conversations here]</em></p>
+
+                    <h2>6. Outlook for Vibe Coding in High-Performance Network Development</h2>
+
+                    <h3>6.1 Technology Development Trends</h3>
+
+                    <p><strong>Continuous Improvement of AI Capabilities:</strong><br>
+                    With the development of large language model technology, we can expect:</p>
                     <ul>
-                        <li><strong>Clear Communication:</strong> Be specific, detailed, and unambiguous in your requirements</li>
-                        <li><strong>Incremental Development:</strong> Build and validate one piece at a time</li>
-                        <li><strong>Continuous Learning:</strong> Use each session to improve your collaboration skills</li>
-                        <li><strong>Knowledge Retention:</strong> Document lessons learned and successful patterns</li>
+                        <li>More accurate code generation capabilities</li>
+                        <li>Better context understanding and reasoning</li>
+                        <li>In-depth mastery of domain-specific knowledge</li>
+                        <li>Stronger code optimization and refactoring abilities</li>
                     </ul>
 
-                    <h2>Conclusion: The Dawn of a New Era</h2>
+                    <p><strong>Evolution of Development Tools:</strong><br>
+                    Vibe coding will gradually integrate into mainstream development toolchains:</p>
+                    <ul>
+                        <li>IDE-integrated intelligent code assistants</li>
+                        <li>Real-time code review and suggestions</li>
+                        <li>Automated test case generation</li>
+                        <li>Intelligent performance analysis and optimization suggestions</li>
+                    </ul>
 
-                    <p>
-                        Our journey from a 6-month DPDK development timeline to 5 days isn't just about speed – it represents a fundamental shift in how we approach complex systems development. Vibe coding has proven that with the right approach, AI can be a powerful multiplier of human capabilities rather than a replacement.
-                    </p>
+                    <h3>6.2 Application Scenario Expansion</h3>
 
-                    <p>
-                        However, let's be clear: vibe coding isn't a magic wand. It's a sophisticated tool that requires skilled practitioners who understand both the domain and the art of human-AI collaboration. The developers who will thrive in this new era are those who embrace this partnership and learn to leverage AI's strengths while compensating for its limitations.
-                    </p>
+                    <p><strong>Network Protocol Stack Development:</strong></p>
+                    <ul>
+                        <li>Automatically generate protocol parsing code</li>
+                        <li>Intelligent packet processing optimization</li>
+                        <li>Complex network topology routing algorithms</li>
+                        <li>Network security protection mechanism implementation</li>
+                    </ul>
 
-                    <p>
-                        The future of software development is collaborative, iterative, and incredibly exciting. As AI capabilities continue to expand, we're moving toward a world where complex, high-performance systems can be built by teams of any size, opening up possibilities we're only beginning to imagine.
-                    </p>
+                    <p><strong>Distributed System Development:</strong></p>
+                    <ul>
+                        <li>Rapid setup of microservice architectures</li>
+                        <li>Optimization of inter-service communication mechanisms</li>
+                        <li>Design of fault tolerance and recovery mechanisms</li>
+                        <li>Performance monitoring and diagnostic tools</li>
+                    </ul>
 
-                    <p>
-                        For every developer working on high-performance systems, network programming, or any complex technical domain: the time to start experimenting with vibe coding is now. The learning curve is steep, but the rewards – in terms of productivity, creativity, and sheer development joy – are immense.
-                    </p>
+                    <p><strong>Embedded System Development:</strong></p>
+                    <ul>
+                        <li>Real-time system task scheduling</li>
+                        <li>Rapid development of hardware drivers</li>
+                        <li>Optimization for resource-constrained environments</li>
+                        <li>Power management and performance balance</li>
+                    </ul>
 
-                    <p>
-                        The future of software development is human creativity amplified by AI capabilities. And that future is here today.
-                    </p>
+                    <h3>6.3 Potential Impact</h3>
 
-                    <div class="call-to-action">
-                        <h3>Ready to Try Vibe Coding?</h3>
-                        <p>Start with a small project, bring your domain expertise, and prepare to be amazed by what's possible when human creativity meets AI capability.</p>
-                    </div>
+                    <p><strong>Revolutionary Improvement in Development Efficiency:</strong><br>
+                    Vibe coding may fundamentally change software development efficiency:</p>
+                    <ul>
+                        <li>Democratize development in domains with high professional barriers</li>
+                        <li>Allow more developers to participate in high-performance system development</li>
+                        <li>Significantly shorten the development cycle from prototype to production</li>
+                        <li>Reduce complexity of maintenance and expansion</li>
+                    </ul>
+
+                    <p><strong>Changes in Skill Requirements:</strong><br>
+                    The focus of developer skills may shift:</p>
+                    <ul>
+                        <li>From coding implementation to architectural design</li>
+                        <li>From syntax mastery to requirement analysis</li>
+                        <li>From debugging skills to systems thinking</li>
+                        <li>From individual development to AI collaboration</li>
+                    </ul>
+
+                    <p><strong>Potential for Software Quality Improvement:</strong></p>
+                    <ul>
+                        <li>Reduce human errors and omissions</li>
+                        <li>Improve code consistency and standardization</li>
+                        <li>More comprehensive test coverage</li>
+                        <li>Better documentation and maintainability</li>
+                    </ul>
+
+                    <h3>6.4 Challenges and Considerations</h3>
+
+                    <p><strong>Technical Challenges:</strong></p>
+                    <ul>
+                        <li>How to ensure security of generated code</li>
+                        <li>How to handle complex performance optimization requirements</li>
+                        <li>How to maintain understanding of underlying technologies</li>
+                        <li>How to balance development efficiency and code quality</li>
+                    </ul>
+
+                    <p><strong>Industry Impact:</strong></p>
+                    <ul>
+                        <li>Transformation pressure on traditional development models</li>
+                        <li>Need for adjustment in developer skill structures</li>
+                        <li>Innovation directions in software engineering education</li>
+                        <li>New issues of intellectual property and code ownership</li>
+                    </ul>
+
+                    <h2>Conclusion</h2>
+
+                    <p>Through this practical experience of DPDK traffic detection system refactoring, we deeply appreciate the enormous potential of vibe coding in high-performance network development. Completing what would traditionally take half a year in 5 days is not just an improvement in development efficiency, but represents an entirely new software development paradigm.</p>
+
+                    <p>However, we must also clearly recognize that vibe coding is not a universal silver bullet. It is more like a powerful tool that requires developers to have solid foundational knowledge, clear requirement analysis capabilities, and keen problem insight. Only within the framework of human-machine collaboration can its true value be realized.</p>
+
+                    <p>Looking to the future, as AI technology continues to develop, vibe coding has the potential to become the standard working model for high-performance system development. This will open the door to high-performance computing and network programming fields for more developers, promoting the technological democratization process of the entire industry.</p>
+
+                    <p>For every technical professional, now is the best time to embrace this new model and learn how to effectively collaborate with AI. The future of software development will be the perfect combination of human creativity and AI capabilities.</p>
+
+                    <p><em>[Suggested to insert screenshots of system running after project completion at the end of the article]</em></p>
 
                     <hr>
 
-                    <div class="article-footer">
-                        <p><strong>Tags:</strong> vibe coding, DPDK, network flows, antiddos, high-performance programming, AI-assisted development</p>
-                        
-                        <div class="social-share">
-                            <p><strong>Share this article:</strong></p>
-                            <a href="#" class="share-btn twitter">Twitter</a>
-                            <a href="#" class="share-btn linkedin">LinkedIn</a>
-                            <a href="#" class="share-btn reddit">Reddit</a>
-                        </div>
-                    </div>
+                    <p><strong>Author Bio:</strong> [Brief introduction of author's technical background can be added here]</p>
+
+                    <p><strong>Project Code:</strong> [If open source, project repository link can be provided here]</p>
+
+                    <p><strong>Related Resources:</strong></p>
+                    <ul>
+                        <li>DPDK Official Documentation: https://doc.dpdk.org/</li>
+                        <li>Project Test Guide: TEST_GUIDE.md</li>
+                        <li>Development Log: 开发日志.md</li>
+                    </ul>
                 </div>
             </div>
         </article>
@@ -485,58 +528,6 @@ struct app_config {
     </footer>
 
     <style>
-        .comparison-table table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 2rem 0;
-        }
-
-        .comparison-table th,
-        .comparison-table td {
-            padding: 12px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-        }
-
-        .comparison-table th {
-            background-color: #f5f5f5;
-            font-weight: bold;
-        }
-
-        .comparison-table tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
-
-        .highlight-box,
-        .success-box,
-        .future-box,
-        .recommendation-box {
-            padding: 1.5rem;
-            margin: 2rem 0;
-            border-left: 4px solid;
-            border-radius: 4px;
-        }
-
-        .highlight-box {
-            background-color: #fff3cd;
-            border-color: #ffc107;
-        }
-
-        .success-box {
-            background-color: #d4edda;
-            border-color: #28a745;
-        }
-
-        .future-box {
-            background-color: #e2e3ff;
-            border-color: #6366f1;
-        }
-
-        .recommendation-box {
-            background-color: #f8f9fa;
-            border-color: #6c757d;
-        }
-
         .code-block {
             background-color: #f8f9fa;
             border: 1px solid #e9ecef;
@@ -550,49 +541,25 @@ struct app_config {
             margin: 0;
         }
 
-        .call-to-action {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 2rem;
-            border-radius: 8px;
-            margin: 3rem 0;
-            text-align: center;
+        .post-content h2 {
+            color: #2c3e50;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
         }
 
-        .call-to-action h3 {
-            margin-top: 0;
+        .post-content h3 {
+            color: #34495e;
+            margin-top: 1.5rem;
+            margin-bottom: 0.8rem;
         }
 
-        .article-footer {
-            margin-top: 4rem;
-            padding-top: 2rem;
-            border-top: 1px solid #e9ecef;
+        .post-content ul, .post-content ol {
+            margin: 1rem 0;
+            padding-left: 2rem;
         }
 
-        .social-share {
-            margin-top: 1rem;
-        }
-
-        .share-btn {
-            display: inline-block;
-            padding: 0.5rem 1rem;
-            margin-right: 0.5rem;
-            background-color: #007bff;
-            color: white;
-            text-decoration: none;
-            border-radius: 4px;
-            font-size: 0.9rem;
-        }
-
-        .share-btn:hover {
-            background-color: #0056b3;
-        }
-
-        .lead {
-            font-size: 1.2em;
-            line-height: 1.6;
-            color: #666;
-            margin-bottom: 2rem;
+        .post-content li {
+            margin-bottom: 0.5rem;
         }
     </style>
 </body>
