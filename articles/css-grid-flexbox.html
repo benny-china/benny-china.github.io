@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSS Grid vs Flexbox: When to Use Which? | My Tech Blog</title>
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <h1><a href="../index.html" style="color: inherit; text-decoration: none;">My Tech Blog</a></h1>
+                </div>
+                <nav>
+                    <ul>
+                        <li><a href="../index.html">Home</a></li>
+                        <li><a href="../about.html">About</a></li>
+                        <li><a href="../contact.html">Contact</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <div class="article-header">
+                <h1 class="article-title">CSS Grid vs Flexbox: When to Use Which?</h1>
+                <div class="article-meta">Published on March 10, 2024 | Category: CSS</div>
+            </div>
+
+            <div class="article-content">
+                <p>CSS Grid and Flexbox are both essential tools for modern CSS layout, but they each have distinct features and use cases. This article provides a detailed comparison through practical examples to help you make the right choice in your projects.</p>
+
+                <h2>Dimensional Differences</h2>
+                <p>The most important distinction is:</p>
+                <ul>
+                    <li><strong>Flexbox</strong>: One-dimensional layout (row or column)</li>
+                    <li><strong>Grid</strong>: Two-dimensional layout (rows and columns simultaneously)</li>
+                </ul>
+
+                <h2>Flexbox Use Cases</h2>
+                <p>Flexbox is best suited for arranging elements within components:</p>
+
+                <h3>1. Navigation Bar Layout</h3>
+                <pre><code>.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+}
+
+.nav-links {
+    display: flex;
+    gap: 1rem;
+    list-style: none;
+}</code></pre>
+
+                <h3>2. Card Content Layout</h3>
+                <pre><code>.card {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.card-content {
+    flex: 1;
+}
+
+.card-actions {
+    margin-top: auto;
+    display: flex;
+    gap: 0.5rem;
+}</code></pre>
+
+                <h3>3. Centering Elements</h3>
+                <pre><code>.center-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}</code></pre>
+
+                <h2>Grid Use Cases</h2>
+                <p>Grid is best suited for overall page layouts:</p>
+
+                <h3>1. Page Layout Structure</h3>
+                <pre><code>.page-layout {
+    display: grid;
+    grid-template-areas: 
+        "header header header"
+        "sidebar main aside"
+        "footer footer footer";
+    grid-template-rows: auto 1fr auto;
+    grid-template-columns: 250px 1fr 200px;
+    min-height: 100vh;
+}
+
+.header { grid-area: header; }
+.sidebar { grid-area: sidebar; }
+.main { grid-area: main; }
+.aside { grid-area: aside; }
+.footer { grid-area: footer; }</code></pre>
+
+                <h3>2. Responsive Grid</h3>
+                <pre><code>.gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+    padding: 1rem;
+}
+
+.gallery-item {
+    aspect-ratio: 1;
+    background-color: #f0f0f0;
+    border-radius: 8px;
+}</code></pre>
+
+                <h3>3. Complex Form Layout</h3>
+                <pre><code>.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.form-group-full {
+    grid-column: 1 / -1;
+}
+
+.form-group-half {
+    grid-column: span 1;
+}</code></pre>
+
+                <h2>Combining Both Approaches</h2>
+                <p>In real-world development, Grid and Flexbox are often used together:</p>
+
+                <pre><code>/* Grid handles overall layout */
+.app-layout {
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    min-height: 100vh;
+}
+
+/* Flexbox handles component-level layout */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+}
+
+.main-content {
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    gap: 2rem;
+    padding: 2rem;
+}
+
+.article-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}</code></pre>
+
+                <h2>Decision Guide</h2>
+                
+                <h3>Use Flexbox when:</h3>
+                <ul>
+                    <li>You need to arrange elements in one direction</li>
+                    <li>Element sizes need to be flexible and adaptive</li>
+                    <li>You need to center elements within a container</li>
+                    <li>Working with navigation bars, button groups, or similar components</li>
+                    <li>Distributing space between items is important</li>
+                </ul>
+
+                <h3>Use Grid when:</h3>
+                <ul>
+                    <li>You need to control both rows and columns simultaneously</li>
+                    <li>Creating complex page layouts</li>
+                    <li>Elements need to overlap or be positioned precisely</li>
+                    <li>Building responsive grid systems</li>
+                    <li>Creating magazine-style layouts</li>
+                </ul>
+
+                <h2>Advanced Flexbox Techniques</h2>
+
+                <h3>Flex-grow, Flex-shrink, Flex-basis</h3>
+                <pre><code>.flex-container {
+    display: flex;
+    width: 100%;
+}
+
+.flex-item-1 {
+    flex: 1 1 200px; /* grow: 1, shrink: 1, basis: 200px */
+}
+
+.flex-item-2 {
+    flex: 2 1 100px; /* grow: 2, shrink: 1, basis: 100px */
+}
+
+.flex-item-3 {
+    flex: 0 0 150px; /* don't grow or shrink, fixed 150px */
+}</code></pre>
+
+                <h3>Flex Wrap and Alignment</h3>
+                <pre><code>.responsive-cards {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.card {
+    flex: 1 1 300px; /* Minimum 300px, can grow */
+    max-width: calc(50% - 0.5rem); /* Never more than 50% minus gap */
+}</code></pre>
+
+                <h2>Advanced Grid Techniques</h2>
+
+                <h3>Grid Line Names and Areas</h3>
+                <pre><code>.advanced-grid {
+    display: grid;
+    grid-template-columns: 
+        [sidebar-start] 250px 
+        [sidebar-end main-start] 1fr 
+        [main-end aside-start] 200px 
+        [aside-end];
+    grid-template-rows: 
+        [header-start] auto 
+        [header-end content-start] 1fr 
+        [content-end footer-start] auto 
+        [footer-end];
+}
+
+.header {
+    grid-column: sidebar-start / aside-end;
+    grid-row: header-start / header-end;
+}
+
+.sidebar {
+    grid-column: sidebar-start / sidebar-end;
+    grid-row: content-start / content-end;
+}</code></pre>
+
+                <h3>Dynamic Grid with minmax()</h3>
+                <pre><code>.responsive-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    grid-auto-rows: minmax(200px, auto);
+    gap: 1.5rem;
+}
+
+/* Cards will automatically adjust count based on available space */
+.grid-card {
+    padding: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+}</code></pre>
+
+                <h2>Performance Considerations</h2>
+                <p>Both Grid and Flexbox are highly optimized, but consider:</p>
+
+                <ul>
+                    <li><strong>Grid</strong> can be more performant for complex layouts as it calculates positioning once</li>
+                    <li><strong>Flexbox</strong> might cause more reflows with dynamic content changes</li>
+                    <li>Use <code>contain: layout</code> to optimize rendering performance</li>
+                    <li>Avoid deeply nested flex containers when possible</li>
+                </ul>
+
+                <h2>Browser Compatibility</h2>
+                <p>Modern browser support is excellent for both:</p>
+                <ul>
+                    <li><strong>Flexbox</strong>: IE 10+ (with prefixes), all modern browsers</li>
+                    <li><strong>Grid</strong>: IE 10+ (limited support with prefixes), full support in modern browsers</li>
+                    <li>Use feature queries for graceful fallbacks: <code>@supports (display: grid) { }</code></li>
+                </ul>
+
+                <h2>Debugging Tips</h2>
+
+                <h3>Flexbox Debugging</h3>
+                <pre><code>/* Visualize flex container */
+.debug-flex {
+    outline: 2px solid red;
+}
+
+.debug-flex > * {
+    outline: 1px solid blue;
+    background: rgba(0, 0, 255, 0.1);
+}</code></pre>
+
+                <h3>Grid Debugging</h3>
+                <pre><code>/* Visualize grid lines */
+.debug-grid {
+    grid-template-columns: repeat(12, [col-start] 1fr);
+    grid-template-rows: repeat(6, [row-start] 1fr);
+    gap: 1rem;
+    outline: 2px solid green;
+}
+
+/* Most browsers have built-in grid inspector tools */</code></pre>
+
+                <h2>Summary</h2>
+                <p>Grid and Flexbox aren't competing technologies—they're complementary. Remember:</p>
+                <ul>
+                    <li><strong>Use Grid for page structure and two-dimensional layouts</strong></li>
+                    <li><strong>Use Flexbox for component layouts and one-dimensional arrangements</strong></li>
+                    <li><strong>Combine both for optimal results</strong></li>
+                    <li><strong>Choose based on your specific use case, not trends</strong></li>
+                    <li><strong>Master both to become a more versatile developer</strong></li>
+                </ul>
+
+                <p>Understanding when and how to use each layout method will make your CSS more maintainable, flexible, and powerful.</p>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 My Tech Blog. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="../js/main.js"></script>
+</body>
+</html>

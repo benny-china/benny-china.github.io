@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>React Hooks Patterns and Best Practices | My Tech Blog</title>
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <h1><a href="../index.html" style="color: inherit; text-decoration: none;">My Tech Blog</a></h1>
+                </div>
+                <nav>
+                    <ul>
+                        <li><a href="../index.html">Home</a></li>
+                        <li><a href="../about.html">About</a></li>
+                        <li><a href="../contact.html">Contact</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <div class="article-header">
+                <h1 class="article-title">React Hooks Patterns and Best Practices</h1>
+                <div class="article-meta">Published on February 28, 2024 | Category: React</div>
+            </div>
+
+            <div class="article-content">
+                <p>React Hooks have changed how we write React components. Beyond the basic Hooks provided by React, there are many useful custom Hook patterns. This article summarizes common Hook patterns and best practices.</p>
+
+                <h2>1. useLocalStorage - Local Storage Management</h2>
+                <pre><code>import { useState, useEffect } from 'react';
+
+function useLocalStorage(key, initialValue) {
+    // Get initial value
+    const [storedValue, setStoredValue] = useState(() => {
+        try {
+            const item = window.localStorage.getItem(key);
+            return item ? JSON.parse(item) : initialValue;
+        } catch (error) {
+            console.error(`Error reading localStorage key "${key}":`, error);
+            return initialValue;
+        }
+    });
+
+    // Function to set value
+    const setValue = (value) => {
+        try {
+            const valueToStore = value instanceof Function ? value(storedValue) : value;
+            setStoredValue(valueToStore);
+            window.localStorage.setItem(key, JSON.stringify(valueToStore));
+        } catch (error) {
+            console.error(`Error setting localStorage key "${key}":`, error);
+        }
+    };
+
+    return [storedValue, setValue];
+}
+
+// Usage example
+function Settings() {
+    const [theme, setTheme] = useLocalStorage('theme', 'light');
+    
+    return (
+        <button onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}>
+            Current theme: {theme}
+        </button>
+    );
+}</code></pre>
+
+                <h2>2. useFetch - Data Fetching</h2>
+                <pre><code>import { useState, useEffect } from 'react';
+
+function useFetch(url, options = {}) {
+    const [data, setData] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    useEffect(() => {
+        const abortController = new AbortController();
+        
+        const fetchData = async () => {
+            try {
+                setLoading(true);
+                setError(null);
+                
+                const response = await fetch(url, {
+                    ...options,
+                    signal: abortController.signal
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const result = await response.json();
+                setData(result);
+            } catch (err) {
+                if (err.name !== 'AbortError') {
+                    setError(err.message);
+                }
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchData();
+
+        return () => {
+            abortController.abort();
+        };
+    }, [url]);
+
+    return { data, loading, error };
+}
+
+// Usage example
+function UserProfile({ userId }) {
+    const { data: user, loading, error } = useFetch(`/api/users/${userId}`);
+
+    if (loading) return <div>Loading...</div>;
+    if (error) return <div>Error: {error}</div>;
+    
+    return <div>User: {user?.name}</div>;
+}</code></pre>
+
+                <h2>3. useDebounce - Debouncing</h2>
+                <pre><code>import { useState, useEffect } from 'react';
+
+function useDebounce(value, delay) {
+    const [debouncedValue, setDebouncedValue] = useState(value);
+
+    useEffect(() => {
+        const handler = setTimeout(() => {
+            setDebouncedValue(value);
+        }, delay);
+
+        return () => {
+            clearTimeout(handler);
+        };
+    }, [value, delay]);
+
+    return debouncedValue;
+}
+
+// Usage example
+function SearchInput() {
+    const [searchTerm, setSearchTerm] = useState('');
+    const debouncedSearchTerm = useDebounce(searchTerm, 500);
+
+    useEffect(() => {
+        if (debouncedSearchTerm) {
+            // Execute search
+            console.log('Search:', debouncedSearchTerm);
+        }
+    }, [debouncedSearchTerm]);
+
+    return (
+        <input
+            type="text"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            placeholder="Search..."
+        />
+    );
+}</code></pre>
+
+                <h2>4. useToggle - Toggle State</h2>
+                <pre><code>import { useState, useCallback } from 'react';
+
+function useToggle(initialValue = false) {
+    const [value, setValue] = useState(initialValue);
+
+    const toggle = useCallback(() => {
+        setValue(prev => !prev);
+    }, []);
+
+    const setTrue = useCallback(() => {
+        setValue(true);
+    }, []);
+
+    const setFalse = useCallback(() => {
+        setValue(false);
+    }, []);
+
+    return [value, { toggle, setTrue, setFalse }];
+}
+
+// Usage example
+function Modal() {
+    const [isOpen, { toggle, setFalse }] = useToggle();
+
+    return (
+        <>
+            <button onClick={toggle}>
+                {isOpen ? 'Close' : 'Open'} Modal
+            </button>
+            {isOpen && (
+                <div className="modal-overlay" onClick={setFalse}>
+                    <div className="modal-content">
+                        <p>Modal content</p>
+                        <button onClick={setFalse}>Close</button>
+                    </div>
+                </div>
+            )}
+        </>
+    );
+}</code></pre>
+
+                <h2>5. useWindowSize - Window Size Monitoring</h2>
+                <pre><code>import { useState, useEffect } from 'react';
+
+function useWindowSize() {
+    const [windowSize, setWindowSize] = useState({
+        width: undefined,
+        height: undefined,
+    });
+
+    useEffect(() => {
+        function handleResize() {
+            setWindowSize({
+                width: window.innerWidth,
+                height: window.innerHeight,
+            });
+        }
+
+        // Get current size immediately
+        handleResize();
+
+        window.addEventListener('resize', handleResize);
+        
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+    }, []);
+
+    return windowSize;
+}
+
+// Usage example
+function ResponsiveComponent() {
+    const { width } = useWindowSize();
+    const isMobile = width && width < 768;
+
+    return (
+        <div>
+            <p>Current screen width: {width}px</p>
+            <p>Device type: {isMobile ? 'Mobile' : 'Desktop'}</p>
+        </div>
+    );
+}</code></pre>
+
+                <h2>6. useAsync - Async Operations Management</h2>
+                <pre><code>import { useState, useEffect, useCallback } from 'react';
+
+function useAsync(asyncFunction, immediate = true) {
+    const [status, setStatus] = useState('idle');
+    const [data, setData] = useState(null);
+    const [error, setError] = useState(null);
+
+    const execute = useCallback(async (...args) => {
+        setStatus('pending');
+        setData(null);
+        setError(null);
+
+        try {
+            const result = await asyncFunction(...args);
+            setData(result);
+            setStatus('success');
+            return result;
+        } catch (err) {
+            setError(err);
+            setStatus('error');
+            throw err;
+        }
+    }, [asyncFunction]);
+
+    useEffect(() => {
+        if (immediate) {
+            execute();
+        }
+    }, [execute, immediate]);
+
+    return {
+        execute,
+        status,
+        data,
+        error,
+        isIdle: status === 'idle',
+        isPending: status === 'pending',
+        isSuccess: status === 'success',
+        isError: status === 'error',
+    };
+}
+
+// Usage example
+function DataComponent() {
+    const {
+        execute: loadData,
+        data,
+        error,
+        isPending,
+        isError
+    } = useAsync(async () => {
+        const response = await fetch('/api/data');
+        return response.json();
+    });
+
+    if (isPending) return <div>Loading...</div>;
+    if (isError) return <div>Error: {error.message}</div>;
+
+    return (
+        <div>
+            <pre>{JSON.stringify(data, null, 2)}</pre>
+            <button onClick={loadData}>Reload</button>
+        </div>
+    );
+}</code></pre>
+
+                <h2>7. useInterval - Interval Management</h2>
+                <pre><code>import { useEffect, useRef } from 'react';
+
+function useInterval(callback, delay) {
+    const savedCallback = useRef();
+
+    // Remember the latest callback
+    useEffect(() => {
+        savedCallback.current = callback;
+    }, [callback]);
+
+    // Set up the interval
+    useEffect(() => {
+        function tick() {
+            savedCallback.current();
+        }
+        
+        if (delay !== null) {
+            let id = setInterval(tick, delay);
+            return () => clearInterval(id);
+        }
+    }, [delay]);
+}
+
+// Usage example
+function Timer() {
+    const [count, setCount] = useState(0);
+    const [isRunning, setIsRunning] = useState(true);
+
+    useInterval(() => {
+        setCount(count + 1);
+    }, isRunning ? 1000 : null);
+
+    return (
+        <div>
+            <h1>{count}</h1>
+            <button onClick={() => setIsRunning(!isRunning)}>
+                {isRunning ? 'Pause' : 'Resume'}
+            </button>
+        </div>
+    );
+}</code></pre>
+
+                <h2>8. useClickOutside - Click Outside Detection</h2>
+                <pre><code>import { useEffect, useRef } from 'react';
+
+function useClickOutside(handler) {
+    const ref = useRef();
+
+    useEffect(() => {
+        function handleClickOutside(event) {
+            if (ref.current && !ref.current.contains(event.target)) {
+                handler();
+            }
+        }
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, [handler]);
+
+    return ref;
+}
+
+// Usage example
+function Dropdown() {
+    const [isOpen, setIsOpen] = useState(false);
+    const dropdownRef = useClickOutside(() => setIsOpen(false));
+
+    return (
+        <div ref={dropdownRef}>
+            <button onClick={() => setIsOpen(!isOpen)}>
+                Toggle Dropdown
+            </button>
+            {isOpen && (
+                <div className="dropdown-menu">
+                    <p>Dropdown content</p>
+                </div>
+            )}
+        </div>
+    );
+}</code></pre>
+
+                <h2>Best Practices</h2>
+
+                <h3>1. Avoid Over-abstraction</h3>
+                <p>Don't use Hooks just for the sake of using them. If the logic is simple, using useState directly in the component might be clearer.</p>
+
+                <h3>2. Proper Naming</h3>
+                <p>Custom Hooks should start with "use" and have names that clearly express their functionality.</p>
+
+                <h3>3. Handle Cleanup</h3>
+                <p>Properly handle cleanup in useEffect to avoid memory leaks:</p>
+
+                <pre><code>useEffect(() => {
+    const timer = setInterval(() => {
+        // Timer logic
+    }, 1000);
+
+    return () => {
+        clearInterval(timer);
+    };
+}, []);</code></pre>
+
+                <h3>4. Correct Use of Dependency Arrays</h3>
+                <p>Ensure that dependency arrays for useEffect and useCallback include all used variables:</p>
+
+                <pre><code>// ❌ Wrong: Missing count dependency
+useEffect(() => {
+    console.log(count);
+}, []);
+
+// ✅ Correct: Including all dependencies
+useEffect(() => {
+    console.log(count);
+}, [count]);</code></pre>
+
+                <h3>5. Performance Optimization</h3>
+                <p>Use useMemo and useCallback to optimize performance, but don't overuse them:</p>
+
+                <pre><code>// Only use when calculations are expensive or dependencies change frequently
+const expensiveValue = useMemo(() => {
+    return heavyCalculation(data);
+}, [data]);
+
+const memoizedCallback = useCallback(() => {
+    doSomething(a, b);
+}, [a, b]);</code></pre>
+
+                <h3>6. Error Boundaries with Hooks</h3>
+                <p>Consider using error boundaries alongside your custom hooks for better error handling:</p>
+
+                <pre><code>function useErrorHandler() {
+    return (error, errorInfo) => {
+        console.error('Error caught:', error, errorInfo);
+        // Send error to monitoring service
+    };
+}</code></pre>
+
+                <h2>Testing Custom Hooks</h2>
+                <p>Use React Testing Library's renderHook utility to test custom hooks:</p>
+
+                <pre><code>import { renderHook, act } from '@testing-library/react';
+import { useToggle } from './useToggle';
+
+test('should toggle value', () => {
+    const { result } = renderHook(() => useToggle());
+    
+    expect(result.current[0]).toBe(false);
+    
+    act(() => {
+        result.current[1].toggle();
+    });
+    
+    expect(result.current[0]).toBe(true);
+});</code></pre>
+
+                <h2>Summary</h2>
+                <p>Custom Hooks are powerful tools for reusing logic in React functional components. By using these patterns appropriately, you can:</p>
+                <ul>
+                    <li>Improve code reusability and testability</li>
+                    <li>Separate concerns, making components focus more on UI rendering</li>
+                    <li>Create clearer component abstractions</li>
+                    <li>Reduce duplicate code and improve development efficiency</li>
+                    <li>Build more maintainable applications</li>
+                </ul>
+
+                <p>Remember, good Hooks should be pure, predictable, and have clear responsibility boundaries. Start with simple hooks and gradually build more complex ones as your application grows.</p>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 My Tech Blog. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="../js/main.js"></script>
+</body>
+</html>

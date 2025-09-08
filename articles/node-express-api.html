@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Building RESTful APIs with Node.js and Express | My Tech Blog</title>
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <h1><a href="../index.html" style="color: inherit; text-decoration: none;">My Tech Blog</a></h1>
+                </div>
+                <nav>
+                    <ul>
+                        <li><a href="../index.html">Home</a></li>
+                        <li><a href="../about.html">About</a></li>
+                        <li><a href="../contact.html">Contact</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <div class="article-header">
+                <h1 class="article-title">Building RESTful APIs with Node.js and Express</h1>
+                <div class="article-meta">Published on March 5, 2024 | Category: Node.js</div>
+            </div>
+
+            <div class="article-content">
+                <p>Building a high-quality RESTful API requires considering many factors: routing design, error handling, data validation, security, and more. This article guides you through creating a complete API application with Node.js and Express from scratch.</p>
+
+                <h2>Project Initialization</h2>
+                <p>First, create the project and install necessary dependencies:</p>
+
+                <pre><code>mkdir blog-api
+cd blog-api
+npm init -y
+
+# Install core dependencies
+npm install express mongoose bcryptjs jsonwebtoken
+npm install cors helmet morgan express-rate-limit
+
+# Install development dependencies
+npm install -D nodemon dotenv</code></pre>
+
+                <h2>Basic Server Setup</h2>
+                <p>Create the <code>app.js</code> file:</p>
+
+                <pre><code>const express = require('express');
+const mongoose = require('mongoose');
+const cors = require('cors');
+const helmet = require('helmet');
+const morgan = require('morgan');
+const rateLimit = require('express-rate-limit');
+require('dotenv').config();
+
+const app = express();
+
+// Security middleware
+app.use(helmet());
+app.use(cors());
+
+// Request logging
+app.use(morgan('combined'));
+
+// Rate limiting
+const limiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 100 // Limit each IP to 100 requests per windowMs
+});
+app.use('/api', limiter);
+
+// Body parsing middleware
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true }));
+
+// Database connection
+mongoose.connect(process.env.MONGODB_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+})
+.then(() => console.log('MongoDB connected successfully'))
+.catch(err => console.error('MongoDB connection failed:', err));
+
+// Routes
+app.use('/api/auth', require('./routes/auth'));
+app.use('/api/posts', require('./routes/posts'));
+app.use('/api/users', require('./routes/users'));
+
+// Error handling middleware
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(err.status || 500).json({
+        message: err.message || 'Internal server error',
+        ...(process.env.NODE_ENV === 'development' && { stack: err.stack })
+    });
+});
+
+// 404 handler
+app.use((req, res) => {
+    res.status(404).json({ message: 'Endpoint not found' });
+});
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+});
+
+module.exports = app;</code></pre>
+
+                <h2>Data Model Definition</h2>
+                <p>Create user and post data models:</p>
+
+                <h3>User Model (models/User.js)</h3>
+                <pre><code>const mongoose = require('mongoose');
+const bcrypt = require('bcryptjs');
+
+const userSchema = new mongoose.Schema({
+    username: {
+        type: String,
+        required: [true, 'Username is required'],
+        unique: true,
+        trim: true,
+        minlength: [3, 'Username must be at least 3 characters'],
+        maxlength: [20, 'Username cannot exceed 20 characters']
+    },
+    email: {
+        type: String,
+        required: [true, 'Email is required'],
+        unique: true,
+        trim: true,
+        lowercase: true,
+        match: [/^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/, 'Invalid email format']
+    },
+    password: {
+        type: String,
+        required: [true, 'Password is required'],
+        minlength: [6, 'Password must be at least 6 characters']
+    },
+    role: {
+        type: String,
+        enum: ['user', 'admin'],
+        default: 'user'
+    }
+}, {
+    timestamps: true
+});
+
+// Password hashing middleware
+userSchema.pre('save', async function(next) {
+    if (!this.isModified('password')) return next();
+    
+    try {
+        const salt = await bcrypt.genSalt(12);
+        this.password = await bcrypt.hash(this.password, salt);
+        next();
+    } catch (error) {
+        next(error);
+    }
+});
+
+// Password verification method
+userSchema.methods.comparePassword = async function(password) {
+    return bcrypt.compare(password, this.password);
+};
+
+// Exclude password when returning user data
+userSchema.methods.toJSON = function() {
+    const user = this.toObject();
+    delete user.password;
+    return user;
+};
+
+module.exports = mongoose.model('User', userSchema);</code></pre>
+
+                <h3>Post Model (models/Post.js)</h3>
+                <pre><code>const mongoose = require('mongoose');
+
+const postSchema = new mongoose.Schema({
+    title: {
+        type: String,
+        required: [true, 'Title is required'],
+        trim: true,
+        maxlength: [100, 'Title cannot exceed 100 characters']
+    },
+    content: {
+        type: String,
+        required: [true, 'Content is required']
+    },
+    excerpt: {
+        type: String,
+        maxlength: [200, 'Excerpt cannot exceed 200 characters']
+    },
+    author: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
+    },
+    tags: [{
+        type: String,
+        trim: true
+    }],
+    status: {
+        type: String,
+        enum: ['draft', 'published', 'archived'],
+        default: 'draft'
+    },
+    publishedAt: {
+        type: Date
+    }
+}, {
+    timestamps: true
+});
+
+// Auto-set publish date when status changes to published
+postSchema.pre('save', function(next) {
+    if (this.status === 'published' && !this.publishedAt) {
+        this.publishedAt = new Date();
+    }
+    next();
+});
+
+module.exports = mongoose.model('Post', postSchema);</code></pre>
+
+                <h2>Authentication Middleware</h2>
+                <p>Create JWT authentication middleware (middleware/auth.js):</p>
+
+                <pre><code>const jwt = require('jsonwebtoken');
+const User = require('../models/User');
+
+const auth = async (req, res, next) => {
+    try {
+        const token = req.header('Authorization')?.replace('Bearer ', '');
+        
+        if (!token) {
+            return res.status(401).json({ message: 'Access token missing' });
+        }
+
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const user = await User.findById(decoded.id);
+
+        if (!user) {
+            return res.status(401).json({ message: 'User not found' });
+        }
+
+        req.user = user;
+        next();
+    } catch (error) {
+        res.status(401).json({ message: 'Invalid access token' });
+    }
+};
+
+// Admin permission check
+const adminAuth = (req, res, next) => {
+    if (req.user.role !== 'admin') {
+        return res.status(403).json({ message: 'Admin privileges required' });
+    }
+    next();
+};
+
+module.exports = { auth, adminAuth };</code></pre>
+
+                <h2>Route Implementation</h2>
+                <p>Create post routes (routes/posts.js):</p>
+
+                <pre><code>const express = require('express');
+const Post = require('../models/Post');
+const { auth, adminAuth } = require('../middleware/auth');
+
+const router = express.Router();
+
+// Get post list
+router.get('/', async (req, res) => {
+    try {
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 10;
+        const skip = (page - 1) * limit;
+
+        const query = { status: 'published' };
+        
+        // Tag filtering
+        if (req.query.tags) {
+            query.tags = { $in: req.query.tags.split(',') };
+        }
+
+        const posts = await Post.find(query)
+            .populate('author', 'username')
+            .sort({ publishedAt: -1 })
+            .skip(skip)
+            .limit(limit);
+
+        const total = await Post.countDocuments(query);
+
+        res.json({
+            posts,
+            pagination: {
+                page,
+                limit,
+                total,
+                pages: Math.ceil(total / limit)
+            }
+        });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
+// Get single post
+router.get('/:id', async (req, res) => {
+    try {
+        const post = await Post.findById(req.params.id)
+            .populate('author', 'username');
+
+        if (!post || post.status !== 'published') {
+            return res.status(404).json({ message: 'Post not found' });
+        }
+
+        res.json(post);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
+// Create post
+router.post('/', auth, async (req, res) => {
+    try {
+        const post = new Post({
+            ...req.body,
+            author: req.user._id
+        });
+
+        await post.save();
+        await post.populate('author', 'username');
+
+        res.status(201).json(post);
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+});
+
+// Update post
+router.put('/:id', auth, async (req, res) => {
+    try {
+        const post = await Post.findById(req.params.id);
+
+        if (!post) {
+            return res.status(404).json({ message: 'Post not found' });
+        }
+
+        // Check permissions
+        if (post.author.toString() !== req.user._id.toString() && 
+            req.user.role !== 'admin') {
+            return res.status(403).json({ message: 'Permission denied' });
+        }
+
+        Object.assign(post, req.body);
+        await post.save();
+        await post.populate('author', 'username');
+
+        res.json(post);
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+});
+
+// Delete post
+router.delete('/:id', auth, async (req, res) => {
+    try {
+        const post = await Post.findById(req.params.id);
+
+        if (!post) {
+            return res.status(404).json({ message: 'Post not found' });
+        }
+
+        if (post.author.toString() !== req.user._id.toString() && 
+            req.user.role !== 'admin') {
+            return res.status(403).json({ message: 'Permission denied' });
+        }
+
+        await Post.findByIdAndDelete(req.params.id);
+        res.json({ message: 'Post deleted successfully' });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
+module.exports = router;</code></pre>
+
+                <h2>Input Validation</h2>
+                <p>Add data validation using express-validator:</p>
+
+                <pre><code>npm install express-validator
+
+// In routes/posts.js
+const { body, validationResult } = require('express-validator');
+
+const validatePost = [
+    body('title')
+        .trim()
+        .notEmpty()
+        .withMessage('Title is required')
+        .isLength({ max: 100 })
+        .withMessage('Title cannot exceed 100 characters'),
+    body('content')
+        .trim()
+        .notEmpty()
+        .withMessage('Content is required'),
+    body('tags')
+        .optional()
+        .isArray()
+        .withMessage('Tags must be an array'),
+    body('status')
+        .optional()
+        .isIn(['draft', 'published', 'archived'])
+        .withMessage('Invalid status value')
+];
+
+// Use in route
+router.post('/', auth, validatePost, async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+    
+    // Continue with post creation...
+});</code></pre>
+
+                <h2>Error Handling</h2>
+                <p>Create a global error handler:</p>
+
+                <pre><code>// utils/errorHandler.js
+class ApiError extends Error {
+    constructor(statusCode, message, isOperational = true, stack = '') {
+        super(message);
+        this.statusCode = statusCode;
+        this.isOperational = isOperational;
+        if (stack) {
+            this.stack = stack;
+        } else {
+            Error.captureStackTrace(this, this.constructor);
+        }
+    }
+}
+
+const handleError = (err, res) => {
+    const { statusCode, message } = err;
+    res.status(statusCode).json({
+        status: 'error',
+        statusCode,
+        message
+    });
+};
+
+module.exports = { ApiError, handleError };</code></pre>
+
+                <h2>Testing</h2>
+                <p>Add basic tests using Jest and Supertest:</p>
+
+                <pre><code>npm install -D jest supertest
+
+// tests/posts.test.js
+const request = require('supertest');
+const app = require('../app');
+
+describe('Posts API', () => {
+    test('GET /api/posts should return published posts', async () => {
+        const res = await request(app)
+            .get('/api/posts')
+            .expect(200);
+
+        expect(res.body.posts).toBeDefined();
+        expect(Array.isArray(res.body.posts)).toBe(true);
+    });
+
+    test('POST /api/posts should create a new post', async () => {
+        const newPost = {
+            title: 'Test Post',
+            content: 'This is a test post content'
+        };
+
+        const res = await request(app)
+            .post('/api/posts')
+            .set('Authorization', `Bearer ${authToken}`)
+            .send(newPost)
+            .expect(201);
+
+        expect(res.body.title).toBe(newPost.title);
+        expect(res.body.content).toBe(newPost.content);
+    });
+});</code></pre>
+
+                <h2>Best Practices Summary</h2>
+                <ul>
+                    <li><strong>Security</strong>: Use helmet, CORS, rate limiting, and other security middleware</li>
+                    <li><strong>Validation</strong>: Validate and sanitize all input data</li>
+                    <li><strong>Error Handling</strong>: Implement consistent error handling mechanisms</li>
+                    <li><strong>Authentication</strong>: Use JWT with proper middleware implementation</li>
+                    <li><strong>Pagination</strong>: Implement pagination for large datasets</li>
+                    <li><strong>Logging</strong>: Log access and error information</li>
+                    <li><strong>Environment Variables</strong>: Store sensitive information in environment variables</li>
+                    <li><strong>Testing</strong>: Write comprehensive tests for all endpoints</li>
+                    <li><strong>Documentation</strong>: Document your API endpoints and usage</li>
+                </ul>
+
+                <p>This foundation provides a robust, scalable API that meets production requirements with proper security, error handling, and maintainability.</p>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 My Tech Blog. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="../js/main.js"></script>
+</body>
+</html>

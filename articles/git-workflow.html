@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Git Workflows for Team Development | My Tech Blog</title>
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <h1><a href="../index.html" style="color: inherit; text-decoration: none;">My Tech Blog</a></h1>
+                </div>
+                <nav>
+                    <ul>
+                        <li><a href="../index.html">Home</a></li>
+                        <li><a href="../about.html">About</a></li>
+                        <li><a href="../contact.html">Contact</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <div class="article-header">
+                <h1 class="article-title">Git Workflows for Team Development</h1>
+                <div class="article-meta">Published on February 20, 2024 | Category: Tools</div>
+            </div>
+
+            <div class="article-content">
+                <p>In team development, a standardized Git workflow can significantly improve development efficiency and code quality. This article introduces several common Git workflows, including Git Flow and GitHub Flow, and analyzes their applicable scenarios.</p>
+
+                <h2>1. Git Flow Workflow</h2>
+                <p>Git Flow is the most classic Git workflow, suitable for projects with regular release cycles.</p>
+
+                <h3>Branch Structure</h3>
+                <ul>
+                    <li><strong>master/main</strong>: Production code, only accepts merges from release and hotfix branches</li>
+                    <li><strong>develop</strong>: Development code, the base branch for feature development</li>
+                    <li><strong>feature/*</strong>: Feature development branches, branched from develop and merged back to develop</li>
+                    <li><strong>release/*</strong>: Release preparation branches, branched from develop, merged to master and develop after bug fixes</li>
+                    <li><strong>hotfix/*</strong>: Emergency fix branches, branched from master, merged to master and develop after fixes</li>
+                </ul>
+
+                <h3>Practical Workflow</h3>
+                <pre><code># Initialize Git Flow
+git flow init
+
+# Start new feature development
+git flow feature start user-authentication
+
+# Complete feature development
+git flow feature finish user-authentication
+
+# Start release preparation
+git flow release start v1.2.0
+
+# Complete release
+git flow release finish v1.2.0
+
+# Emergency hotfix
+git flow hotfix start critical-bug
+git flow hotfix finish critical-bug</code></pre>
+
+                <h3>Pros and Cons Analysis</h3>
+                <p><strong>Pros:</strong></p>
+                <ul>
+                    <li>Clear branch responsibilities, suitable for large projects</li>
+                    <li>Supports parallel development of multiple features</li>
+                    <li>Has a clear release process</li>
+                    <li>Good isolation between different types of work</li>
+                </ul>
+
+                <p><strong>Cons:</strong></p>
+                <ul>
+                    <li>Many branches with high learning curve</li>
+                    <li>Not suitable for continuous integration/continuous deployment</li>
+                    <li>Merge conflicts can be complex</li>
+                    <li>Overhead for small teams or simple projects</li>
+                </ul>
+
+                <h2>2. GitHub Flow</h2>
+                <p>GitHub Flow is a lightweight workflow with only one long-lived branch.</p>
+
+                <h3>Workflow Steps</h3>
+                <pre><code># 1. Create feature branch
+git checkout -b feature/add-login-page
+
+# 2. Develop and commit on the branch
+git add .
+git commit -m "Add login form validation"
+
+# 3. Push to remote repository
+git push origin feature/add-login-page
+
+# 4. Create Pull Request
+# Create PR on GitHub, wait for code review
+
+# 5. Merge to main branch
+# After PR approval, merge to main branch
+
+# 6. Deploy
+# Main branch code is automatically deployed to production</code></pre>
+
+                <h3>Suitable Scenarios</h3>
+                <ul>
+                    <li>Continuous integration/continuous deployment projects</li>
+                    <li>Small to medium-sized teams</li>
+                    <li>Projects requiring rapid iteration</li>
+                    <li>Open source projects</li>
+                    <li>Web applications with frequent deployments</li>
+                </ul>
+
+                <h2>3. GitLab Flow</h2>
+                <p>GitLab Flow combines the advantages of Git Flow and GitHub Flow.</p>
+
+                <h3>Environment Branch Pattern</h3>
+                <pre><code># Main branches
+main          # Development branch
+pre-production # Pre-production environment branch  
+production    # Production environment branch
+
+# Feature development workflow
+git checkout -b feature/new-dashboard main
+# After development completion, merge to main
+# Merge from main to pre-production for testing
+# After testing passes, merge from pre-production to production</code></pre>
+
+                <h3>Release Branch Pattern</h3>
+                <pre><code># For versioned software releases
+main                    # Main development branch
+release/v1.0           # Release branch for version 1.0
+release/v2.0           # Release branch for version 2.0
+
+# Bug fixes go to both main and relevant release branches
+git cherry-pick commit-hash  # Apply fixes to release branches</code></pre>
+
+                <h2>4. Forking Workflow</h2>
+                <p>Commonly used in open source projects, each contributor has their own fork.</p>
+
+                <h3>Process Overview</h3>
+                <pre><code># 1. Fork the main repository
+# On GitHub/GitLab, click "Fork" button
+
+# 2. Clone your fork
+git clone https://github.com/yourusername/project.git
+cd project
+
+# 3. Add upstream remote
+git remote add upstream https://github.com/originalowner/project.git
+
+# 4. Create feature branch
+git checkout -b feature/awesome-feature
+
+# 5. Make changes and push to your fork
+git push origin feature/awesome-feature
+
+# 6. Create Pull Request from your fork to main repository
+
+# 7. Keep your fork updated
+git fetch upstream
+git checkout main
+git merge upstream/main
+git push origin main</code></pre>
+
+                <h2>5. Practical Git Commands and Techniques</h2>
+
+                <h3>Branch Management</h3>
+                <pre><code># View all branches
+git branch -a
+
+# Delete local branch
+git branch -d feature/old-feature
+
+# Delete remote branch
+git push origin --delete feature/old-feature
+
+# Rename current branch
+git branch -m new-branch-name
+
+# View merged/unmerged branches
+git branch --merged
+git branch --no-merged
+
+# Track remote branch
+git branch -u origin/main</code></pre>
+
+                <h3>Commit Management</h3>
+                <pre><code># Modify last commit message
+git commit --amend -m "New commit message"
+
+# Interactive rebase to clean commit history
+git rebase -i HEAD~3
+
+# Stash current work
+git stash push -m "Work in progress"
+git stash pop
+
+# View file change history
+git log -p filename
+git log --follow filename  # Follow file through renames
+
+# Squash commits
+git reset --soft HEAD~3
+git commit -m "Combined commit message"</code></pre>
+
+                <h3>Merge Strategies</h3>
+                <pre><code># Regular merge (creates merge commit)
+git merge feature-branch
+
+# Fast-forward merge (no merge commit)
+git merge --ff-only feature-branch
+
+# Squash merge (combine all commits into one)
+git merge --squash feature-branch
+
+# No-fast-forward merge (always create merge commit)
+git merge --no-ff feature-branch</code></pre>
+
+                <h2>6. Code Review Best Practices</h2>
+
+                <h3>Pre-commit Checklist</h3>
+                <ul>
+                    <li>Code follows team formatting standards</li>
+                    <li>No unused code or comments</li>
+                    <li>Commit message clearly describes changes</li>
+                    <li>Includes necessary tests</li>
+                    <li>Updates related documentation</li>
+                    <li>No sensitive information (passwords, API keys)</li>
+                </ul>
+
+                <h3>Pull Request Template</h3>
+                <pre><code>## Description
+Brief description of the purpose and content of this change.
+
+## Type of Change
+- [ ] Bug fix
+- [ ] New feature
+- [ ] Refactoring
+- [ ] Documentation update
+- [ ] Performance optimization
+
+## Testing
+- [ ] Unit tests pass
+- [ ] Integration tests pass
+- [ ] Manual testing completed
+
+## Impact Scope
+- [ ] Frontend
+- [ ] Backend
+- [ ] Database
+- [ ] API
+
+## Checklist
+- [ ] Code follows team standards
+- [ ] Added necessary tests
+- [ ] Documentation updated
+- [ ] No significant performance impact</code></pre>
+
+                <h2>7. Common Issues and Solutions</h2>
+
+                <h3>Merge Conflicts</h3>
+                <pre><code># View conflicted files
+git status
+
+# Manually resolve conflicts, then mark as resolved
+git add conflicted-file.js
+
+# Continue merge
+git commit
+
+# Or abort merge
+git merge --abort
+
+# Use merge tool
+git mergetool</code></pre>
+
+                <h3>Undoing Operations</h3>
+                <pre><code># Undo working directory changes
+git checkout -- filename
+git restore filename  # Git 2.23+
+
+# Undo staging area changes
+git reset HEAD filename
+git restore --staged filename  # Git 2.23+
+
+# Undo last commit (keep changes)
+git reset --soft HEAD~1
+
+# Undo last commit (discard changes)
+git reset --hard HEAD~1
+
+# Undo pushed commits
+git revert commit-hash
+git push origin main</code></pre>
+
+                <h3>Cleaning Up</h3>
+                <pre><code># Remove untracked files
+git clean -n  # Dry run
+git clean -f  # Force remove
+
+# Remove local branches that are deleted on remote
+git remote prune origin
+
+# Remove merged branches
+git branch --merged | grep -v main | xargs git branch -d</code></pre>
+
+                <h2>8. Automation Tools</h2>
+
+                <h3>Pre-commit Hooks</h3>
+                <pre><code># package.json
+{
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged",
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+    }
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "eslint --fix",
+      "prettier --write",
+      "git add"
+    ]
+  }
+}</code></pre>
+
+                <h3>Commit Message Standards</h3>
+                <pre><code>type(scope): description
+
+# Types
+feat: new feature
+fix: bug fix
+docs: documentation update
+style: code formatting changes
+refactor: refactoring
+test: test related
+chore: build process or auxiliary tool changes
+
+# Examples
+feat(auth): add user login functionality
+fix(api): handle null response in user service
+docs(readme): update installation instructions
+style(header): fix indentation in navigation
+refactor(utils): extract common validation functions</code></pre>
+
+                <h2>9. Advanced Techniques</h2>
+
+                <h3>Git Hooks</h3>
+                <pre><code># Pre-receive hook example
+#!/bin/sh
+# Reject direct pushes to main branch
+while read oldrev newrev refname; do
+    if [ "$refname" = "refs/heads/main" ]; then
+        echo "Direct pushes to main branch are not allowed"
+        exit 1
+    fi
+done</code></pre>
+
+                <h3>Git Aliases</h3>
+                <pre><code># Useful Git aliases
+git config --global alias.co checkout
+git config --global alias.br branch
+git config --global alias.ci commit
+git config --global alias.st status
+git config --global alias.unstage 'reset HEAD --'
+git config --global alias.last 'log -1 HEAD'
+git config --global alias.visual '!gitk'</code></pre>
+
+                <h2>Summary</h2>
+                <p>Choosing the right Git workflow depends on several factors:</p>
+                <ul>
+                    <li><strong>Team Size</strong>: Small teams suit simple workflows, large teams need more structure</li>
+                    <li><strong>Release Cadence</strong>: Frequent releases suit GitHub Flow, scheduled releases suit Git Flow</li>
+                    <li><strong>Project Complexity</strong>: Complex projects need stricter branch management</li>
+                    <li><strong>Team Experience</strong>: New teams should start with simple workflows</li>
+                    <li><strong>Deployment Strategy</strong>: CI/CD favors simpler workflows</li>
+                </ul>
+
+                <p>Remember, workflows are meant to serve development, not restrict it. Choose and adapt workflows based on your actual situation to truly improve team development efficiency. The key is consistency and clear communication within the team.</p>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 My Tech Blog. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="../js/main.js"></script>
+</body>
+</html>
