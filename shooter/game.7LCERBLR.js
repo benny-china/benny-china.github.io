@@ -14906,7 +14906,24 @@ function ys() {
     A.setWave(1, 0),
     A.setBoard(null)
 }
+function mobileLandscape() {
+    let n = document.documentElement
+      , t = n.requestFullscreen || n.webkitRequestFullscreen;
+    try {
+        if (t) {
+            let e = t.call(n);
+            (e && e.then ? e : Promise.resolve()).then( () => {
+                try {
+                    screen.orientation && screen.orientation.lock && screen.orientation.lock("landscape").catch( () => {})
+                } catch (s) {}
+            }
+            ).catch( () => {})
+        } else
+            screen.orientation && screen.orientation.lock && screen.orientation.lock("landscape").catch( () => {})
+    } catch (e) {}
+}
 function Tn() {
+    nt.mobile && mobileLandscape(),
     D.init(),
     D.resume(),
     nt.usingGamepad || nt.requestLock(),
@@ -15213,3 +15230,51 @@ function Ua(n, t=!0) {
     })
 }
 requestAnimationFrame(ja);
+// ===== Mobile Input — Step 1: right-half drag -> look (feeds nt.mx/my, the same accumulator mouse uses) =====
+if (nt.mobile) {
+    let lookId = null
+      , lx = 0
+      , ly = 0
+      , LOOK_SENS = 2.2
+      , active = () => y.state === "play" && !y.menu
+      , rightHalf = t => t.clientX > window.innerWidth / 2;
+    window.addEventListener("touchstart", e => {
+        if (active())
+            for (let t of e.changedTouches)
+                if (lookId === null && rightHalf(t)) {
+                    lookId = t.identifier,
+                    lx = t.clientX,
+                    ly = t.clientY;
+                    break
+                }
+    }
+    , {
+        passive: !1
+    });
+    window.addEventListener("touchmove", e => {
+        if (lookId !== null)
+            for (let t of e.changedTouches)
+                if (t.identifier === lookId) {
+                    nt.mx += (t.clientX - lx) * LOOK_SENS,
+                    nt.my += (t.clientY - ly) * LOOK_SENS,
+                    lx = t.clientX,
+                    ly = t.clientY,
+                    e.preventDefault();
+                    break
+                }
+    }
+    , {
+        passive: !1
+    });
+    let endTouch = e => {
+        for (let t of e.changedTouches)
+            if (t.identifier === lookId) {
+                lookId = null;
+                break
+            }
+    }
+    ;
+    window.addEventListener("touchend", endTouch),
+    window.addEventListener("touchcancel", endTouch)
+}
+
