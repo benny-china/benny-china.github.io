@@ -8957,7 +8957,7 @@ var Si = class {
         let e = this.ctx
           , s = e.player;
         this.fireT = this.interval,
-        this.mag--;
+        te.infAmmo || this.mag--;
         let i = this.spreadCur;
         this.spreadCur = Math.min(this.spreadCur + this.spreadKick, this.spreadMax);
         let o = 0;
@@ -12382,17 +12382,6 @@ var Oi = class {
     <div><b>Both mouse buttons</b> dash-slash once the gauge is lit</div>
     <div><b>1-4 / wheel</b> rifle \xB7 shotgun \xB7 sniper \xB7 katana</div>
   </div>
-  <div><div class="colhead">PS5 CONTROLLER</div>
-    <div><b>L stick</b> move &nbsp; <b>R stick</b> look &nbsp; <b>L3</b> sprint</div>
-    <div><b>R2</b> fire / slash &nbsp; <b>L2</b> aim / block</div>
-    <div><b>\u2715</b> jump &nbsp; <b>\u25CB</b> slide \xB7 air dash</div>
-    <div><b>L1</b> grapple (hold to reel, \u2715 to launch)</div>
-    <div><b>L2 + R2</b> dash-slash once the katana gauge is lit</div>
-    <div><b>R1</b> quick katana slash, then back to your gun</div>
-    <div><b>\u25A1</b> reload &nbsp; <b>\u25B3</b> next weapon</div>
-    <div><b>R3 / d-pad up</b> grenade \xB7 hold to throw further</div>
-    <div><b>Create</b> scoreboard (online) &nbsp; <b>Options</b> pause</div>
-  </div>
 </div>`;
 var dn = document.getElementById("c")
   , se = new ci(dn)
@@ -12462,7 +12451,8 @@ var zs = Number(localStorage.getItem("doodle_best") || 0)
   , te = {
     sens: Number(localStorage.getItem("doodle_sens") || 100),
     invert: localStorage.getItem("doodle_invert") === "1",
-    trackpad: localStorage.getItem("doodle_trackpad") === "1"
+    trackpad: localStorage.getItem("doodle_trackpad") === "1",
+    infAmmo: localStorage.getItem("doodle_infammo") === "1"
 };
 function Ui() {
     nt.mouseSens = .0022 * te.sens / 100,
@@ -12473,7 +12463,8 @@ function Ui() {
     A.setTrackpad(te.trackpad),
     localStorage.setItem("doodle_sens", String(te.sens)),
     localStorage.setItem("doodle_invert", te.invert ? "1" : "0"),
-    localStorage.setItem("doodle_trackpad", te.trackpad ? "1" : "0")
+    localStorage.setItem("doodle_trackpad", te.trackpad ? "1" : "0"),
+    localStorage.setItem("doodle_infammo", te.infAmmo ? "1" : "0")
 }
 var ms = 20
   , so = 600
@@ -14461,6 +14452,7 @@ function ln() {
     <label><input type="checkbox" id="setInv" ${te.invert ? "checked" : ""}> invert vertical look</label>
     <label><input type="checkbox" id="setTrack" ${te.trackpad ? "checked" : ""}> trackpad mode <span class="k">Shift aims \xB7 double-tap W sprints</span></label>
     <label><input type="checkbox" id="setMus" ${Ee ? "checked" : ""}> music <span class="k">(M)</span></label>
+    <label><input type="checkbox" id="setInf" ${te.infAmmo ? "checked" : ""}> infinite ammo</label>
   </div>`
 }
 function cn() {
@@ -14492,6 +14484,11 @@ function cn() {
         Ee = s.target.checked,
         localStorage.setItem("doodle_music", Ee ? "1" : "0"),
         D.musicOn(Ee)
+    }
+    ),
+    n.querySelector("#setInf").addEventListener("change", s => {
+        te.infAmmo = s.target.checked,
+        Ui()
     }
     )
 }
@@ -14580,7 +14577,7 @@ var le = n => String(n).replace(/[&<>"]/g, t => ({
 function Z0() {
     return `<h1>DOODLE DISTRICT</h1><h2>a scribbled survival shooter</h2>
     <div class="mainbtns"><button type="button" class="start" id="soloBtn">START<i>solo \xB7 survive the waves</i></button><button type="button" id="onlineBtn">PLAY ONLINE<i>free for all \xB7 up to 10 players</i></button></div>
-    ${vn(Yt, !0)}${Ki}${ln()}${qa()}${zs ? `<div class="beststat">best score: ${zs}</div>` : ""}`
+    ${vn(Yt, !0)}${ln()}${qa()}${zs ? `<div class="beststat">best score: ${zs}</div>` : ""}`
 }
 function Q0() {
     return `<h1>PLAY ONLINE</h1><h2>free for all \xB7 first to ${ms} \xB7 up to 10 players</h2>
