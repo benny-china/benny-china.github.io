@@ -15445,6 +15445,45 @@ if (nt.mobile) {
         passive: !1
     })
 }
+// ===== Mobile Input — weapon swap button (tap = next weapon; label shows current weapon) =====
+if (nt.mobile) {
+    let swap = document.createElement("div");
+    swap.id = "mswap",
+    swap.className = "mbtn",
+    swap.style.cssText = "right:14px;top:58px;height:44px;min-width:96px;width:auto;padding:0 16px;border-radius:22px;font-size:16px",
+    (document.getElementById("hud") || document.body).appendChild(swap);
+    try {
+        swap.textContent = B.weapon.name
+    } catch (e) {
+        swap.textContent = "WEAPON"
+    }
+    let _setWeapon = A.setWeapon.bind(A);
+    A.setWeapon = (n, h) => (_setWeapon(n, h),
+    swap.textContent = n);
+    let down = e => {
+        e.preventDefault(),
+        e.stopPropagation(),
+        swap.classList.add("pressed"),
+        nt.keys.nextWeapon = !0
+    }
+      , up = e => {
+        e.preventDefault(),
+        e.stopPropagation(),
+        swap.classList.remove("pressed"),
+        nt.keys.nextWeapon = !1
+    }
+    ;
+    swap.addEventListener("touchstart", down, {
+        passive: !1
+    }),
+    swap.addEventListener("touchend", up, {
+        passive: !1
+    }),
+    swap.addEventListener("touchcancel", up, {
+        passive: !1
+    })
+}
+
 
 
 
