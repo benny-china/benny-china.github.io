@@ -3,7 +3,23 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Doodle District</title>
+<title>Doodle District Mobile — Browser FPS on Android (three.js)</title>
+<meta name="description" content="A hand-drawn wave-survival FPS built with three.js. The desktop-only original now plays on Android too — full touch controls to move, aim, shoot and jump right in your phone browser. Free, no install.">
+<meta name="keywords" content="browser fps, mobile fps, android browser game, three.js game, webgl shooter, doodle district, doodleshooter, touch controls, free online shooter, wave survival">
+<meta name="theme-color" content="#f6f4e7">
+<link rel="canonical" href="https://benny-china.github.io/shooter/">
+<meta name="robots" content="index,follow">
+<!-- Open Graph / social share -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Doodle District Mobile">
+<meta property="og:title" content="Doodle District Mobile — now playable on Android">
+<meta property="og:description" content="The PC-only three.js survival shooter, ported to Android with full touch controls. Move, aim, shoot & jump in your browser — free, no install.">
+<meta property="og:url" content="https://benny-china.github.io/shooter/">
+<meta property="og:image" content="https://benny-china.github.io/shooter/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Doodle District Mobile — now playable on Android">
+<meta name="twitter:description" content="A hand-drawn three.js survival FPS, now with Android touch controls. Play free in your browser.">
+<meta name="twitter:image" content="https://benny-china.github.io/shooter/og.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&family=Caveat:wght@600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="./style.A4A8BF44.css">
@@ -13,14 +29,23 @@
   "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
 } }
 </script>
+<style>
+#credit{position:fixed;left:0;right:0;bottom:0;z-index:6;margin:0;padding:5px 12px;max-height:34vh;overflow:auto;font:12px/1.45 'Patrick Hand',system-ui,sans-serif;color:#4a453c;background:rgba(246,244,231,.62);text-align:center;pointer-events:none}
+#credit p{margin:3px auto;max-width:900px}
+#credit a{color:#2f6cb0;pointer-events:auto}
+#credit b{color:#2a251d}
+:fullscreen #credit,:-webkit-full-screen #credit{display:none}
+@media (pointer:coarse){#credit{font-size:10px;padding:3px 8px;line-height:1.35}}
+</style>
 </head>
 <body>
 <canvas id="c"></canvas>
 <div id="hud"></div>
+<footer id="credit">
+<p><b>Doodle District Mobile</b> — a free hand-drawn wave-survival FPS built with <a href="https://threejs.org/" target="_blank" rel="noopener">three.js</a> and WebGL. The desktop-only original now adds full <b>Android touch controls</b> (on-screen stick, drag-to-look, fire and jump) so you can play a browser first-person shooter on your phone.</p>
+<p>Mobile port of <a href="https://doodleshooter.vercel.app/" target="_blank" rel="noopener">Doodle District (doodleshooter)</a> — full credit for the original game to its creator. Best in Chrome on Android or any desktop browser.</p>
+</footer>
 <script src="https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js"></script>
 <script type="module" src="./game.7LCERBLR.js"></script>
-<!-- Vercel Web Analytics: collects page views once Analytics is enabled on the project; harmless elsewhere -->
-<script>window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };</script>
-<script defer src="/_vercel/insights/script.js"></script>
 </body>
 </html>

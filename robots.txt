@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://benny-china.github.io/shooter/sitemap.xml
