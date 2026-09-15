@@ -15277,4 +15277,84 @@ if (nt.mobile) {
     window.addEventListener("touchend", endTouch),
     window.addEventListener("touchcancel", endTouch)
 }
+// ===== Mobile Input — Step 2: left-half virtual joystick -> movement (sets nt.keys.forward/back/left/right, 8-way) =====
+if (nt.mobile) {
+    let css = document.createElement("style");
+    css.textContent = "#mjoy{position:fixed;z-index:60;width:130px;height:130px;margin:-65px 0 0 -65px;border-radius:50%;border:3px solid var(--ink,#222);background:rgba(255,255,255,.12);pointer-events:none;display:none}#mjoy .knob{position:absolute;left:50%;top:50%;width:60px;height:60px;margin:-30px 0 0 -30px;border-radius:50%;border:3px solid var(--ink,#222);background:rgba(255,255,255,.4)}",
+    document.head.appendChild(css);
+    let base = document.createElement("div");
+    base.id = "mjoy";
+    let knob = document.createElement("div");
+    knob.className = "knob",
+    base.appendChild(knob),
+    (document.getElementById("hud") || document.body).appendChild(base);
+    let joyId = null
+      , cx = 0
+      , cy = 0
+      , R = 55
+      , DZ = 14
+      , clearMove = () => nt.keys.forward = nt.keys.back = nt.keys.left = nt.keys.right = !1
+      , active = () => y.state === "play" && !y.menu
+      , leftHalf = t => t.clientX <= window.innerWidth / 2;
+    window.addEventListener("touchstart", e => {
+        if (active())
+            for (let t of e.changedTouches)
+                if (joyId === null && leftHalf(t)) {
+                    joyId = t.identifier,
+                    cx = t.clientX,
+                    cy = t.clientY,
+                    base.style.left = cx + "px",
+                    base.style.top = cy + "px",
+                    knob.style.transform = "translate(0px,0px)",
+                    base.style.display = "block";
+                    break
+                }
+    }
+    , {
+        passive: !1
+    });
+    window.addEventListener("touchmove", e => {
+        if (joyId !== null)
+            for (let t of e.changedTouches)
+                if (t.identifier === joyId) {
+                    let s = t.clientX - cx
+                      , i = t.clientY - cy
+                      , o = Math.hypot(s, i)
+                      , a = s
+                      , l = i;
+                    if (o > R && (a = s / o * R,
+                    l = i / o * R),
+                    knob.style.transform = "translate(" + a + "px," + l + "px)",
+                    o < DZ)
+                        clearMove();
+                    else {
+                        let r = s / o
+                          , c = i / o
+                          , h = .38;
+                        nt.keys.right = r > h,
+                        nt.keys.left = r < -h,
+                        nt.keys.forward = c < -h,
+                        nt.keys.back = c > h
+                    }
+                    e.preventDefault();
+                    break
+                }
+    }
+    , {
+        passive: !1
+    });
+    let endJoy = e => {
+        for (let t of e.changedTouches)
+            if (t.identifier === joyId) {
+                joyId = null,
+                base.style.display = "none",
+                clearMove();
+                break
+            }
+    }
+    ;
+    window.addEventListener("touchend", endJoy),
+    window.addEventListener("touchcancel", endJoy)
+}
+
 
