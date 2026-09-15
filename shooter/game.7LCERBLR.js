@@ -15398,8 +15398,55 @@ if (nt.mobile) {
         })
     }
     ;
-    bind(fireBtn, v => nt.mouseBtns.fire = v),
-    bind(jumpBtn, v => nt.keys.jump = v)
+    bind(jumpBtn, v => nt.keys.jump = v);
+    // FIRE button doubles as an aim surface: hold to fire AND slide the same thumb to look (PUBG/COD-mobile style).
+    // Touch events keep targeting the origin element after the finger leaves it, so a drag started on FIRE still feeds look.
+    let fId = null
+      , fLx = 0
+      , fLy = 0
+      , FIRE_LOOK = 2.2;
+    fireBtn.addEventListener("touchstart", e => {
+        e.preventDefault(),
+        e.stopPropagation(),
+        fId === null && (fId = e.changedTouches[0].identifier,
+        fLx = e.changedTouches[0].clientX,
+        fLy = e.changedTouches[0].clientY,
+        fireBtn.classList.add("pressed"),
+        nt.mouseBtns.fire = !0)
+    }
+    , {
+        passive: !1
+    });
+    fireBtn.addEventListener("touchmove", e => {
+        for (let t of e.changedTouches)
+            if (t.identifier === fId) {
+                nt.mx += (t.clientX - fLx) * FIRE_LOOK,
+                nt.my += (t.clientY - fLy) * FIRE_LOOK,
+                fLx = t.clientX,
+                fLy = t.clientY,
+                e.preventDefault();
+                break
+            }
+    }
+    , {
+        passive: !1
+    });
+    let fUp = e => {
+        for (let t of e.changedTouches)
+            if (t.identifier === fId) {
+                fId = null,
+                fireBtn.classList.remove("pressed"),
+                nt.mouseBtns.fire = !1;
+                break
+            }
+    }
+    ;
+    fireBtn.addEventListener("touchend", fUp, {
+        passive: !1
+    }),
+    fireBtn.addEventListener("touchcancel", fUp, {
+        passive: !1
+    })
 }
 
 
