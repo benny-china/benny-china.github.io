@@ -15356,5 +15356,51 @@ if (nt.mobile) {
     window.addEventListener("touchend", endJoy),
     window.addEventListener("touchcancel", endJoy)
 }
+// ===== Mobile Input — Step 3/4: on-screen Fire + Jump buttons (write nt.mouseBtns.fire / nt.keys.jump) =====
+if (nt.mobile) {
+    let style = document.createElement("style");
+    style.textContent = ".mbtn{position:fixed;z-index:60;pointer-events:auto;display:flex;align-items:center;justify-content:center;border-radius:50%;border:3px solid var(--ink,#222);background:rgba(255,255,255,.28);color:var(--ink,#222);font-family:'Patrick Hand','Caveat',cursive;font-weight:600;user-select:none;-webkit-user-select:none;-webkit-tap-highlight-color:transparent;touch-action:none}.mbtn.pressed{background:var(--red,#e33);color:#fff}#hud.nogame .mbtn,#hud.nogame #mjoy{display:none!important}",
+    document.head.appendChild(style);
+    let host = document.getElementById("hud") || document.body
+      , mkBtn = (id, label, css) => {
+        let b = document.createElement("div");
+        return b.id = id,
+        b.className = "mbtn",
+        b.textContent = label,
+        b.style.cssText = css,
+        host.appendChild(b),
+        b
+    }
+      , fireBtn = mkBtn("mfire", "FIRE", "right:26px;bottom:28px;width:94px;height:94px;font-size:20px")
+      , jumpBtn = mkBtn("mjump", "JUMP", "right:132px;bottom:44px;width:74px;height:74px;font-size:16px")
+      , bind = (el, set) => {
+        let down = e => {
+            e.preventDefault(),
+            e.stopPropagation(),
+            el.classList.add("pressed"),
+            set(!0)
+        }
+          , up = e => {
+            e.preventDefault(),
+            e.stopPropagation(),
+            el.classList.remove("pressed"),
+            set(!1)
+        }
+        ;
+        el.addEventListener("touchstart", down, {
+            passive: !1
+        }),
+        el.addEventListener("touchend", up, {
+            passive: !1
+        }),
+        el.addEventListener("touchcancel", up, {
+            passive: !1
+        })
+    }
+    ;
+    bind(fireBtn, v => nt.mouseBtns.fire = v),
+    bind(jumpBtn, v => nt.keys.jump = v)
+}
+
 
 
